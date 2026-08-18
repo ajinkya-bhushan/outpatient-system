@@ -1,0 +1,267 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Clinical Precision System
+ * Design tokens ported from the Clinical Documentation Assistant UI spec.
+ * All colors are oklch. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --font-headline: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-data: "Inter", ui-monospace, monospace;
+
+  --text-display-lg: 32px;
+  --text-display-lg--line-height: 40px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 28px;
+  --text-headline-sm--font-weight: 600;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-sm: 14px;
+  --text-body-sm--line-height: 20px;
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--letter-spacing: 0.05em;
+  --text-label-caps--font-weight: 700;
+  --text-data-mono: 14px;
+  --text-data-mono--line-height: 20px;
+  --text-data-mono--font-weight: 500;
+
+
+  --radius-sm: 0.125rem;
+  --radius: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  --shadow-ambient: 0 4px 16px -4px color-mix(in oklab, var(--on-surface) 14%, transparent);
+  --shadow-lifted: 0 10px 30px -12px color-mix(in oklab, var(--on-surface) 22%, transparent);
+
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-lowest: var(--surface-container-lowest);
+  --color-surface-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-high: var(--surface-container-high);
+  --color-surface-highest: var(--surface-container-highest);
+  --color-surface-variant: var(--surface-variant);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-surface-tint: var(--surface-tint);
+
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+
+  --color-background: var(--background);
+  --color-foreground: var(--on-background);
+  --color-border: var(--outline-variant);
+  --color-input: var(--outline-variant);
+  --color-ring: var(--primary);
+  --color-muted: var(--surface-container);
+  --color-muted-foreground: var(--on-surface-variant);
+  --color-card: var(--surface-container-lowest);
+  --color-card-foreground: var(--on-surface);
+  --color-accent: var(--surface-container-high);
+  --color-accent-foreground: var(--on-surface);
+  --color-destructive: var(--error);
+  --color-destructive-foreground: var(--on-error);
+}
+
+:root {
+  --surface: oklch(0.983 0.004 286.3);
+  --surface-dim: oklch(0.889 0.003 286.3);
+  --surface-bright: oklch(0.983 0.004 286.3);
+  --surface-container-lowest: oklch(1 0 89.9);
+  --surface-container-low: oklch(0.965 0.004 286.3);
+  --surface-container: oklch(0.95 0.003 286.3);
+  --surface-container-high: oklch(0.932 0.003 286.3);
+  --surface-container-highest: oklch(0.914 0.004 286.3);
+  --on-surface: oklch(0.225 0.005 248);
+  --on-surface-variant: oklch(0.396 0.022 275.1);
+  --inverse-surface: oklch(0.312 0.005 248);
+  --inverse-on-surface: oklch(0.956 0.004 286.3);
+  --outline: oklch(0.57 0.021 272.1);
+  --outline-variant: oklch(0.829 0.021 276.9);
+  --surface-tint: oklch(0.49 0.174 260.7);
+  --primary: oklch(0.381 0.15 259.3);
+  --on-primary: oklch(1 0 89.9);
+  --primary-container: oklch(0.467 0.176 260);
+  --on-primary-container: oklch(0.854 0.071 269.1);
+  --inverse-primary: oklch(0.83 0.084 268.2);
+  --secondary: oklch(0.472 0.08 195.9);
+  --on-secondary: oklch(1 0 89.9);
+  --secondary-container: oklch(0.894 0.09 196.5);
+  --on-secondary-container: oklch(0.488 0.083 195.9);
+  --tertiary: oklch(0.392 0.16 26.3);
+  --on-tertiary: oklch(1 0 89.9);
+  --tertiary-container: oklch(0.482 0.188 26.4);
+  --on-tertiary-container: oklch(0.861 0.075 24.8);
+  --error: oklch(0.506 0.193 27.7);
+  --on-error: oklch(1 0 89.9);
+  --error-container: oklch(0.918 0.042 25.2);
+  --on-error-container: oklch(0.417 0.17 27.4);
+  --primary-fixed: oklch(0.915 0.041 271.9);
+  --primary-fixed-dim: oklch(0.83 0.084 268.2);
+  --on-primary-fixed: oklch(0.228 0.089 259.2);
+  --on-primary-fixed-variant: oklch(0.402 0.16 259.5);
+  --secondary-fixed: oklch(0.903 0.09 196.5);
+  --secondary-fixed-dim: oklch(0.818 0.091 195.5);
+  --on-secondary-fixed: oklch(0.22 0.038 194.8);
+  --on-secondary-fixed-variant: oklch(0.388 0.066 196.2);
+  --tertiary-fixed: oklch(0.918 0.042 25.2);
+  --tertiary-fixed-dim: oklch(0.837 0.09 25);
+  --on-tertiary-fixed: oklch(0.236 0.096 26.2);
+  --on-tertiary-fixed-variant: oklch(0.417 0.17 26.1);
+  --background: oklch(0.983 0.004 286.3);
+  --on-background: oklch(0.225 0.005 248);
+  --surface-variant: oklch(0.914 0.004 286.3);
+}
+
+@layer base {
+  * {
+    border-color: var(--outline-variant);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--on-background);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-headline);
+  }
+}
+
+@utility font-headline {
+  font-family: var(--font-headline);
+}
+
+@utility font-data {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+}
+
+@utility label-caps {
+  font-size: var(--text-label-caps);
+  line-height: var(--text-label-caps--line-height);
+  letter-spacing: var(--text-label-caps--letter-spacing);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@utility confidence-low {
+  background-color: color-mix(in oklab, var(--error-container) 35%, transparent);
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--error);
+  text-underline-offset: 3px;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon-filled {
+  font-variation-settings: "FILL" 1;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary-container) 60%, transparent);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px color-mix(in oklab, var(--primary-container) 0%, transparent);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary-container) 0%, transparent);
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.rec-pulse {
+  animation: rec-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes waveform {
+  0%,
+  100% {
+    transform: scaleY(0.2);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.waveform-bar {
+  animation: waveform 1s ease-in-out infinite;
+  transform-origin: center;
+}
