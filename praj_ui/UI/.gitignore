@@ -1,0 +1,10 @@
+node_modules/
+dist/
+vite.log
+vite.err
+page*.png
+check-*.png
+edge-profile*/
+tmp-ssr.cjs
+.env
+.DS_Store
