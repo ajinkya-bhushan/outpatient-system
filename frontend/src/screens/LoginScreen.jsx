@@ -1,7 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { login as loginRequest } from '../api/auth.js';
 import Icon from '../components/Icon.jsx';
 
 function LoginScreen({ role, setRole, go }) {
+  const [providerId, setProviderId] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setSubmitting(true);
+    try {
+      await loginRequest({
+        provider_id: providerId,
+        password,
+        role,
+      });
+      go('schedule');
+    } catch (err) {
+      if (err.status === 401) {
+        setError(err.message || 'Invalid provider ID or password');
+      } else {
+        setError('Unable to sign in. Check your connection and try again.');
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <main className="login-screen">
       <section className="login-intro">
@@ -25,6 +53,24 @@ function LoginScreen({ role, setRole, go }) {
           <p>Secure Clinical Portal</p>
         </div>
 
+        {error ? (
+          <div className="login-error-pop" role="alert">
+            <Icon name="error" />
+            <div>
+              <strong>Sign in failed</strong>
+              <p>{error}</p>
+            </div>
+            <button
+              type="button"
+              className="login-error-dismiss"
+              onClick={() => setError('')}
+              aria-label="Dismiss error"
+            >
+              <Icon name="close" />
+            </button>
+          </div>
+        ) : null}
+
         <div className="segment" role="group" aria-label="Clinical role">
           {['Physician', 'Admin'].map((item) => (
             <button
@@ -39,7 +85,7 @@ function LoginScreen({ role, setRole, go }) {
           ))}
         </div>
 
-        <button type="button" className="button button-primary button-xl" onClick={() => go('schedule')}>
+        <button type="button" className="button button-primary button-xl">
           <Icon name="login" />
           Sign in with Hospital SSO
         </button>
@@ -50,15 +96,18 @@ function LoginScreen({ role, setRole, go }) {
           <span />
         </div>
 
-        <form className="login-form" onSubmit={(event) => {
-          event.preventDefault();
-          go('schedule');
-        }}>
+        <form className="login-form" onSubmit={handleSubmit}>
           <label>
             <span>Provider ID</span>
             <div className="input-wrap">
               <Icon name="badge" />
-              <input placeholder="Enter Provider ID" />
+              <input
+                placeholder="Enter Provider ID"
+                autoComplete="username"
+                value={providerId}
+                onChange={(event) => setProviderId(event.target.value)}
+                required
+              />
             </div>
           </label>
           <label>
@@ -68,11 +117,22 @@ function LoginScreen({ role, setRole, go }) {
             </span>
             <div className="input-wrap">
               <Icon name="lock" />
-              <input placeholder="Enter Password" type="password" />
+              <input
+                placeholder="Enter Password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
             </div>
           </label>
-          <button type="submit" className="button button-outline button-xl">
-            Sign In
+          <button
+            type="submit"
+            className="button button-outline button-xl"
+            disabled={submitting}
+          >
+            {submitting ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
 

@@ -257,6 +257,50 @@ code {
   font-size: 18px;
 }
 
+.login-error-pop {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--error);
+  border-radius: var(--radius);
+  color: var(--error);
+  background: var(--error-soft);
+}
+
+.login-error-pop .icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.login-error-pop strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.login-error-pop p {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.login-error-dismiss {
+  margin-left: auto;
+  padding: 4px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--error);
+  background: transparent;
+}
+
+.login-form button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .segment {
   display: grid;
   grid-template-columns: 1fr 1fr;

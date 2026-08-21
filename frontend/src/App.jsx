@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getToken } from './api/auth.js';
 import { screens } from './data/clinicalData.js';
 import ClinicalShell from './layouts/ClinicalShell.jsx';
 import AnalyticsScreen from './screens/AnalyticsScreen.jsx';
@@ -16,7 +17,13 @@ function getInitialScreen() {
   }
 
   const requested = new URLSearchParams(window.location.search).get('screen');
-  return screens.includes(requested) ? requested : 'login';
+  if (!screens.includes(requested)) {
+    return 'login';
+  }
+  if (requested !== 'login' && !getToken()) {
+    return 'login';
+  }
+  return requested;
 }
 
 function App() {
@@ -27,9 +34,10 @@ function App() {
   const toggleSidebar = () => setSidebarCollapsed((value) => !value);
 
   const go = (next) => {
-    setScreen(next);
+    const target = next !== 'login' && !getToken() ? 'login' : next;
+    setScreen(target);
     if (typeof window !== 'undefined') {
-      const url = next === 'login' ? window.location.pathname : `${window.location.pathname}?screen=${next}`;
+      const url = target === 'login' ? window.location.pathname : `${window.location.pathname}?screen=${target}`;
       window.history.replaceState(null, '', url);
     }
     window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));

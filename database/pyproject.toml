@@ -1,0 +1,27 @@
+[project]
+name = "outpatient-database"
+version = "0.1.0"
+description = "Alembic migrations and SQLAlchemy CRUD against direct Postgres"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "alembic>=1.13.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.9",
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "python-dotenv>=1.0.0",
+    "pydantic>=2.0.0",
+    "bcrypt>=4.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["scripts"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

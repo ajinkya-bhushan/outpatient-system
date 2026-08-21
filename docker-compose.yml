@@ -1,0 +1,28 @@
+name: outpatient-system
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: outpatient-backend:latest
+    container_name: outpatient-backend
+    network_mode: host
+    restart: unless-stopped
+    env_file:
+      - .env
+      - database/.env
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "10200"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://127.0.0.1:10200
+    image: outpatient-frontend:latest
+    container_name: outpatient-frontend
+    network_mode: host
+    restart: unless-stopped
