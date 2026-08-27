@@ -105,3 +105,28 @@ def test_detect_entities_rejects_blank() -> None:
         assert False, "expected ValidationFailed"
     except ValidationFailed:
         pass
+
+
+def test_comprehend_client_passes_settings_credentials(monkeypatch) -> None:
+    from app.core import config
+    from app.modules.medical_comprehend import app as comprehend
+
+    captured: dict = {}
+
+    def fake_client(service_name, **kwargs):
+        captured["service"] = service_name
+        captured["kwargs"] = kwargs
+        return object()
+
+    monkeypatch.setattr(comprehend, "boto3", type("Boto", (), {"client": staticmethod(fake_client)}))
+    monkeypatch.setattr(config.settings, "AWS_ACCESS_KEY_ID", "AKIATEST")
+    monkeypatch.setattr(config.settings, "AWS_SECRET_ACCESS_KEY", "secret")
+    monkeypatch.setattr(config.settings, "AWS_DEFAULT_REGION", "us-east-1")
+    monkeypatch.setattr(config.settings, "AWS_SESSION_TOKEN", None)
+
+    comprehend._client()
+    assert captured["service"] == "comprehendmedical"
+    assert captured["kwargs"]["aws_access_key_id"] == "AKIATEST"
+    assert captured["kwargs"]["aws_secret_access_key"] == "secret"
+    assert captured["kwargs"]["region_name"] == "us-east-1"
+    assert "aws_session_token" not in captured["kwargs"]

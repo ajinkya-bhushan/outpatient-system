@@ -1435,9 +1435,19 @@ code {
   right: 16px;
   bottom: 16px;
   left: 16px;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.recording-actions .button {
+  flex: 1 1 140px;
+}
+
+/* Generate Note is conditional; give it its own row rather than squeezing the
+   two primary controls when it appears. */
+.recording-actions .recording-generate {
+  flex: 1 1 100%;
 }
 
 .generation-content {
@@ -1497,6 +1507,11 @@ code {
 .ai-ring .icon {
   width: 42px;
   height: 42px;
+}
+
+.ai-ring.done svg,
+.ai-ring.done span {
+  animation: none;
 }
 
 .generation-copy h2 {
@@ -1601,6 +1616,24 @@ code {
 .generation-footer {
   background: linear-gradient(to top, var(--background) 72%, rgba(246, 250, 255, 0));
   border-top: 0;
+}
+
+.generation-footer-actions {
+  width: min(100%, 440px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.generation-error {
+  max-width: 440px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--error);
+  background: #fdecea;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .success-content {
@@ -1838,6 +1871,62 @@ code {
 .review-note-body p {
   margin: 0;
   overflow-wrap: anywhere;
+}
+
+.review-section-text {
+  white-space: pre-wrap;
+}
+
+.review-transcript-block {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-sm);
+  background: #f3f7fc;
+  text-align: left;
+}
+
+.review-transcript-block span {
+  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.review-transcript-block pre {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #20242b;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.review-text-button.active {
+  color: #ffffff;
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.review-load-error,
+.review-empty-hint {
+  max-width: 100%;
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  background: #f3f5f9;
+  line-height: 1.45;
+}
+
+.review-load-error {
+  color: var(--error);
+  background: #fdecea;
 }
 
 .review-text-button,
@@ -2771,4 +2860,189 @@ code {
   .review-sync-bar .button-xl {
     min-width: 0;
   }
+}
+
+/* ── Transcript turns: playback, editing and pipeline states ───────────────── */
+
+.visually-hidden-input {
+  display: none;
+}
+
+.button-tiny {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+  gap: 6px;
+}
+
+.transcript-bubble-time {
+  margin-left: 8px;
+  color: var(--outline);
+  font-style: normal;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.turn-actions {
+  display: flex;
+  gap: 4px;
+  /* Reveal on hover or keyboard focus, so the bubbles stay calm while reading. */
+  opacity: 0;
+  transition: opacity 120ms ease-in-out;
+}
+
+.transcript-bubble:hover .turn-actions,
+.turn-actions:focus-within {
+  opacity: 1;
+}
+
+.turn-action-button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--outline-soft);
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.turn-action-button:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.turn-action-button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.turn-action-button.active {
+  color: #ffffff;
+  border-color: var(--primary);
+  background: var(--primary);
+}
+
+.turn-action-button .icon {
+  width: 17px;
+  height: 17px;
+}
+
+.turn-editor {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.turn-editor textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--primary);
+  border-radius: 18px 18px 18px 4px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.turn-editor textarea:focus-visible {
+  outline: 2px solid var(--primary-strong);
+  outline-offset: 1px;
+}
+
+.turn-editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.speaker-swap {
+  padding: 8px 12px;
+  border: 1px solid var(--outline-soft);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.speaker-swap span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.transcript-empty,
+.transcript-processing {
+  margin: auto 0;
+  padding: 24px 16px;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.transcript-empty .icon {
+  width: 30px;
+  height: 30px;
+  color: var(--outline);
+}
+
+.transcript-empty p,
+.transcript-processing p {
+  max-width: 34ch;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.transcript-error {
+  padding: 12px 8px 12px 14px;
+  border: 1px solid var(--error-soft);
+  border-radius: var(--radius);
+  color: var(--error);
+  background: rgba(255, 218, 214, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.transcript-error p {
+  flex: 1 1 auto;
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* The footer is absolutely positioned; a second button row has to be cleared by
+   whatever scrolls beneath it. */
+.recording-canvas.has-generate .extraction-panel {
+  padding-bottom: 152px;
+}
+
+.recording-canvas.has-generate .transcript-panel {
+  padding-bottom: 28px;
+}
+
+/* Not recording: keep the pill, drop the alarming red pulse. */
+.record-timer.idle {
+  border-color: var(--outline-soft);
+  background: var(--surface-soft);
+}
+
+.record-timer.idle .record-dot {
+  background: var(--outline);
+  box-shadow: none;
+  animation: none;
+}
+
+.record-timer.idle b {
+  color: var(--muted);
 }

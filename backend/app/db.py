@@ -24,6 +24,9 @@ _models = importlib.util.module_from_spec(_spec)
 sys.modules["outpatient_db_models"] = _models
 _spec.loader.exec_module(_models)
 User = _models.User
+Encounter = _models.Encounter
+SoapNote = _models.SoapNote
+SoapNoteSection = _models.SoapNoteSection
 
 
 def get_database_url() -> str:

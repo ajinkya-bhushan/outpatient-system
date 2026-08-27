@@ -1,49 +1,115 @@
-"""HTTP client for the sst_v1 transcription service.
+"""
+app/modules/stt/service.py
+───────────────────────────
+The single seam every caller uses to reach speech-to-text.
 
-sst_v1 remains the Whisper engine host. This module does not load models;
-it records/uploads audio and returns a transcript through that service.
+``STT_ENGINE_MODE`` decides what sits behind it:
 
-Endpoints used
---------------
-POST {STT_BASE_URL}/api/v1/transcribe   file upload
-WS   {STT_BASE_URL}/api/v1/live         live recording
-GET  {STT_BASE_URL}/api/v1/health       liveness
-GET  {STT_BASE_URL}/api/v1/ready        engine readiness
+* ``local``  – SpeechBrain + Whisper in this process (:mod:`app.modules.stt.local`)
+* ``remote`` – the standalone sst_v1 service (:mod:`app.modules.stt.remote_client`)
+
+Routes depend only on this facade, so swapping engines needs no route changes —
+which is exactly how local inference replaced the sst_v1 proxy without touching
+``/api/v1/pipeline/upload``. ``transcribe_upload`` keeps its original signature
+for that reason.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-import httpx
-
 from app.core.config import settings
-from app.core.errors import UpstreamTimeout, UpstreamUnavailable, ValidationFailed
+from app.core.errors import ConfigurationError
 from app.core.logging import get_logger
-from app.modules.stt.schemas import TranscriptResult, TranscriptSegment
+from app.modules.stt.remote_client import RemoteSTTClient
+from app.modules.stt.schemas import (
+    DiarizedTranscriptResponse,
+    EngineStatusResponse,
+    TranscriptResult,
+)
 
 logger = get_logger(__name__)
 
 
 class STTService:
-    def __init__(self, base_url: str | None = None, timeout: float | None = None) -> None:
-        self.base_url = (base_url or settings.STT_BASE_URL).rstrip("/")
-        self.timeout = timeout or settings.STT_TIMEOUT_SECONDS
+    """Engine-agnostic speech-to-text entry point."""
 
-    def live_url(self) -> str:
-        http_url = self.base_url
-        if http_url.startswith("https://"):
-            return http_url.replace("https://", "wss://", 1) + "/api/v1/live"
-        return http_url.replace("http://", "ws://", 1) + "/api/v1/live"
+    def __init__(self, mode: str | None = None) -> None:
+        self.mode = mode or settings.STT_ENGINE_MODE
+
+    @property
+    def is_local(self) -> bool:
+        return self.mode == "local"
+
+    # ── Status ────────────────────────────────────────────────────────────────
+
+    def engine_status(self) -> EngineStatusResponse:
+        """Describe the active engine without triggering a model load."""
+        if self.is_local:
+            from app.modules.stt.local.engine import get_engine
+
+            return EngineStatusResponse(**get_engine().status().to_dict())
+
+        return EngineStatusResponse(
+            mode="remote",
+            device="n/a",
+            whisper_model="delegated to sst_v1",
+            whisper_backend=settings.DEFAULT_STT_ENGINE,
+            compute_type="n/a",
+            diarization_enabled=False,
+            default_num_speakers=None,
+            models_loaded=False,
+            dependencies_available=True,
+            detail=f"Proxying to sst_v1 at {settings.STT_BASE_URL}",
+            extra={"stt_base_url": settings.STT_BASE_URL},
+        )
 
     async def health(self) -> dict[str, Any]:
+        """Readiness detail for ``/api/v1/ready``."""
+        if self.is_local:
+            status = self.engine_status()
+            if not status.dependencies_available:
+                raise ConfigurationError(status.detail or "Local STT is unavailable.")
+            return {
+                "status": "ok",
+                "mode": "local",
+                "device": status.device,
+                "models_loaded": status.models_loaded,
+            }
+
+        payload = await RemoteSTTClient().health()
+        return {"status": "ok", "mode": "remote", **payload}
+
+    def preload(self) -> None:
+        """Load models eagerly. Never fatal — the API serves other routes too."""
+        if not (self.is_local and settings.STT_MODEL_PRELOAD):
+            return
+
+        from app.modules.stt.local.engine import get_engine
+
         try:
-            async with httpx.AsyncClient(timeout=5.0) as client:
-                response = await client.get(f"{self.base_url}/api/v1/health")
-                response.raise_for_status()
-                return response.json()
-        except httpx.HTTPError as exc:
-            raise UpstreamUnavailable(f"STT service is not reachable at {self.base_url}: {exc}") from exc
+            get_engine().load()
+        except Exception as exc:
+            logger.warning("stt_preload_failed", error=str(exc)[:300])
+
+    # ── Live streaming ────────────────────────────────────────────────────────
+
+    def live_url(self) -> str:
+        """Upstream WebSocket URL for the live-recording proxy.
+
+        Live streaming is only available in remote mode. The local engine is
+        file-based for now; incremental diarization is a separate piece of work
+        (see backend/docs/STT_DIARIZATION_API.md).
+        """
+        if self.is_local:
+            raise ConfigurationError(
+                "Live streaming is not implemented for the local STT engine. "
+                "Use POST /api/v1/stt/diarize with a recorded file, or set "
+                "STT_ENGINE_MODE=remote to proxy live audio to sst_v1."
+            )
+        return RemoteSTTClient().live_url()
+
+    # ── Transcription ─────────────────────────────────────────────────────────
 
     async def transcribe_upload(
         self,
@@ -54,70 +120,58 @@ class STTService:
         language: str | None = None,
         task: str = "transcribe",
     ) -> TranscriptResult:
-        if not file_bytes:
-            raise ValidationFailed("Audio file is empty.")
-        if len(file_bytes) > settings.max_audio_size_bytes:
-            raise ValidationFailed(
-                f"Audio exceeds {settings.MAX_AUDIO_SIZE_MB} MB limit."
+        """Transcribe an uploaded audio file to plain text."""
+        if not self.is_local:
+            return await RemoteSTTClient().transcribe_upload(
+                file_bytes=file_bytes,
+                filename=filename,
+                content_type=content_type,
+                engine=engine,
+                language=language,
+                task=task,
             )
 
-        data = {
-            "engine": engine or settings.DEFAULT_STT_ENGINE,
-            "language": language or "",
-            "task": task,
-        }
-        files = {
-            "file": (filename, file_bytes, content_type or "application/octet-stream"),
-        }
+        from app.modules.stt.local import runner
 
-        logger.info("stt_upload_started", filename=filename, engine=data["engine"])
-        try:
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
-                response = await client.post(
-                    f"{self.base_url}/api/v1/transcribe",
-                    data=data,
-                    files=files,
-                )
-        except httpx.TimeoutException as exc:
-            raise UpstreamTimeout("STT transcription timed out.") from exc
-        except httpx.HTTPError as exc:
-            raise UpstreamUnavailable(f"STT service request failed: {exc}") from exc
-
-        if response.status_code == 400:
-            raise ValidationFailed(response.text)
-        if response.status_code >= 400:
-            raise UpstreamUnavailable(
-                f"STT transcription failed: HTTP {response.status_code} {response.text}"
-            )
-
-        payload = response.json()
-        segments = [
-            TranscriptSegment(
-                id=item.get("id", index),
-                start=item.get("start", 0.0),
-                end=item.get("end", 0.0),
-                text=item.get("text", ""),
-            )
-            for index, item in enumerate(payload.get("segments") or [])
-        ]
-        result = TranscriptResult(
-            text=payload.get("text") or "",
-            language=payload.get("language") or "unknown",
-            segments=segments,
-            audio_duration=payload.get("audio_duration") or 0.0,
-            processing_time=payload.get("processing_time") or 0.0,
-            real_time_factor=payload.get("real_time_factor") or 0.0,
-            engine=payload.get("engine") or data["engine"],
-            model=payload.get("model") or "unknown",
-            source="upload",
+        return await runner.transcribe(
+            file_bytes=file_bytes,
+            filename=filename,
+            language=language,
+            task=task,
         )
-        logger.info(
-            "stt_upload_completed",
-            engine=result.engine,
-            chars=len(result.text),
-            rtf=result.real_time_factor,
+
+    async def diarize_upload(
+        self,
+        file_bytes: bytes,
+        filename: str,
+        num_speakers: int | None = None,
+        min_speakers: int | None = None,
+        max_speakers: int | None = None,
+        language: str | None = None,
+        speaker_names: dict[str, str] | None = None,
+        encounter_id: str | None = None,
+        save_audio: bool = True,
+    ) -> DiarizedTranscriptResponse:
+        """Transcribe an uploaded audio file and label each turn with a speaker."""
+        if not self.is_local:
+            raise ConfigurationError(
+                "Speaker diarization requires STT_ENGINE_MODE=local; the sst_v1 "
+                "service does not expose a diarization endpoint."
+            )
+
+        from app.modules.stt.local import runner
+
+        return await runner.diarize(
+            file_bytes=file_bytes,
+            filename=filename,
+            num_speakers=num_speakers,
+            min_speakers=min_speakers,
+            max_speakers=max_speakers,
+            language=language,
+            speaker_names=speaker_names,
+            encounter_id=encounter_id,
+            save_audio=save_audio,
         )
-        return result
 
 
 def get_stt_service() -> STTService:

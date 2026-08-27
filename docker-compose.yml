@@ -5,6 +5,13 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
+      args:
+        # Set to false for a lean image that proxies to sst_v1 instead of
+        # running SpeechBrain and Whisper in-process (STT_ENGINE_MODE=remote).
+        INSTALL_STT: "true"
+        # Set when the host GPU needs a CUDA build other than the PyPI default,
+        # e.g. https://download.pytorch.org/whl/cu128 for Blackwell cards.
+        TORCH_INDEX_URL: ""
     image: outpatient-backend:latest
     container_name: outpatient-backend
     network_mode: host
@@ -15,6 +22,26 @@ services:
     environment:
       HOST: "0.0.0.0"
       PORT: "10200"
+    volumes:
+      # Encounter audio and transcription results. This is PHI: back it up and
+      # encrypt it like any other patient data store, and see
+      # backend/docs/STT_DIARIZATION_API.md for the unresolved retention
+      # question.
+      - backend-audio:/app/backend/data/audio
+      # Model weights, several GB. A named volume keeps them across rebuilds so
+      # the container does not re-download on every deploy.
+      - backend-models:/app/backend/data/models
+    # Requires the NVIDIA container runtime on the host. On a CPU-only host,
+    # delete this block and set STT_DEVICE=cpu: the engine also falls back to
+    # CPU on its own, but reserving a GPU that does not exist fails the whole
+    # `compose up`.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   frontend:
     build:
@@ -26,3 +53,7 @@ services:
     container_name: outpatient-frontend
     network_mode: host
     restart: unless-stopped
+
+volumes:
+  backend-audio:
+  backend-models:

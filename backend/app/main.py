@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -19,15 +22,30 @@ from app.core.logging import configure_logging, get_logger
 configure_logging()
 logger = get_logger(__name__)
 
+@asynccontextmanager
+async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+    """Optionally warm the local STT models so the first request is not slow.
+
+    Controlled by ``STT_MODEL_PRELOAD``; failures are logged, never fatal, since
+    the other routes do not depend on speech models.
+    """
+    from app.modules.stt.service import get_stt_service
+
+    get_stt_service().preload()
+    yield
+
+
 app = FastAPI(
     title="Outpatient Documentation API",
     description=(
-        "Record or upload an encounter, generate a transcript, extract clinical "
-        "entities with Amazon Comprehend Medical, and draft a SOAP note."
+        "Record or upload an encounter, transcribe it with speaker diarization "
+        "(SpeechBrain + Whisper), extract clinical entities with Amazon "
+        "Comprehend Medical, and draft a SOAP note."
     ),
     version=__version__,
     docs_url="/docs",
     redoc_url="/redoc",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

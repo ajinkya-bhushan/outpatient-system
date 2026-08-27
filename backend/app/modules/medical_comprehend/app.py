@@ -32,7 +32,14 @@ def _client():
             "AWS credentials are not set. Add AWS_ACCESS_KEY_ID and "
             "AWS_SECRET_ACCESS_KEY to the backend .env file."
         )
-    kwargs: dict[str, Any] = {"region_name": settings.AWS_DEFAULT_REGION}
+    # Pass keys explicitly. Pydantic loads them from env files into Settings;
+    # that does not export them into os.environ, so boto3's default chain
+    # (env vars, shared credentials file, instance role) cannot see them.
+    kwargs: dict[str, Any] = {
+        "region_name": settings.AWS_DEFAULT_REGION,
+        "aws_access_key_id": settings.AWS_ACCESS_KEY_ID,
+        "aws_secret_access_key": settings.AWS_SECRET_ACCESS_KEY,
+    }
     if settings.AWS_SESSION_TOKEN:
         kwargs["aws_session_token"] = settings.AWS_SESSION_TOKEN
     return boto3.client("comprehendmedical", **kwargs)

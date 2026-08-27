@@ -24,6 +24,33 @@ dependencies = [
     "PyJWT>=2.8.0",
 ]
 
+[project.optional-dependencies]
+# Local speech-to-text + speaker diarization (SpeechBrain + Whisper).
+#
+# Kept out of the base dependency set on purpose: this pulls in PyTorch and is
+# multiple gigabytes. Install it only where inference actually runs:
+#
+#   uv sync --extra stt
+#
+# With STT_ENGINE_MODE=remote the backend proxies to the sst_v1 service instead
+# and none of these packages are needed.
+#
+# GPU note: the torch wheel must target the host GPU architecture. Blackwell
+# (compute capability 12.0, e.g. RTX 50-series) needs a CUDA 12.8+ build:
+#   uv pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
+stt = [
+    "torch>=2.2.0",
+    "torchaudio>=2.2.0",
+    "speechbrain>=1.0.0",
+    "faster-whisper>=1.0.0",
+    "openai-whisper>=20231106",
+    "soundfile>=0.12.1",
+    "librosa>=0.10.0",
+    "scikit-learn>=1.4.0",
+    "scipy>=1.12.0",
+    "numpy>=1.26.0",
+]
+
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",
@@ -42,6 +69,9 @@ packages = ["app"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+markers = [
+    "real_model: loads real SpeechBrain/Whisper weights and needs audio fixtures (deselect with -m 'not real_model')",
+]
 
 [tool.ruff]
 line-length = 100

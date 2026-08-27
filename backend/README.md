@@ -6,20 +6,30 @@ Full product and implementation specification: [`../docs/FEATURE_SPEC.md`](../do
 
 The pipeline is three modules:
 
-1. **stt** — record live or upload audio, then generate a transcript (`sst_v1`)
+1. **stt** — upload audio, then transcribe it with speaker diarization
+   (SpeechBrain + Whisper, in-process). See
+   [`docs/STT_DIARIZATION_API.md`](docs/STT_DIARIZATION_API.md).
 2. **medical_comprehend** — extract clinical entities (`soap_create/app.py`)
 3. **generate_soap** — call the Aava documentation agent (`soap_create/agent_call.py`)
+
+SOAP create (transcript → entities → note) is documented in
+[`../soap_create/API.md`](../soap_create/API.md).
 
 ## Run
 
 ```bash
 cd backend
 cp .env.example .env
-uv sync
+uv sync --extra stt          # omit --extra stt for STT_ENGINE_MODE=remote
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 10200
 ```
 
 API docs: http://127.0.0.1:10200/docs
+
+The `stt` extra pulls in PyTorch, SpeechBrain and Whisper (several GB) and
+**ffmpeg must be on `PATH`**. Model weights download on first use into
+`MODEL_CACHE_DIR`. Without a GPU the engine falls back to CPU, which works but
+is slower than real time with `small.en`.
 
 ## Docker
 
@@ -39,12 +49,17 @@ Seed login (after `database` migration `011_add_user_auth_columns`):
 | Physician | `DR-SMITH` | `Smith#2026` |
 | Admin | `ADMIN` | `Admin#2026` |
 
-For live/upload transcription, start `sst_v1` on port 8000 as well:
+Transcription runs inside this service by default. To delegate it to the
+standalone `sst_v1` service instead — a CPU-only host, or comparing engines —
+set `STT_ENGINE_MODE=remote` and start it on port 8000:
 
 ```bash
 cd ../sst_v1
 uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
+
+Diarization is unavailable in remote mode, and live streaming is available only
+in remote mode.
 
 ## Main endpoints
 
@@ -55,14 +70,28 @@ uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 | `POST` | `/api/v1/auth/login` | Provider ID + password + role → JWT |
 | `GET` | `/api/v1/auth/me` | Current user from Bearer token |
 | `POST` | `/api/v1/auth/logout` | Client discard (stateless 204) |
+| `POST` | `/api/v1/stt/diarize` | Upload audio → speaker-labelled transcript |
 | `POST` | `/api/v1/stt/transcribe` | Upload audio → transcript |
-| `WS` | `/api/v1/stt/live` | Live recording proxy to `sst_v1` |
+| `GET` | `/api/v1/stt/engine` | Active engine, device, model readiness |
+| `GET` | `/api/v1/stt/jobs` | Stored transcription jobs |
+| `GET`/`DELETE` | `/api/v1/stt/jobs/{job_id}` | Fetch or delete a stored result |
+| `GET` | `/api/v1/stt/jobs/{job_id}/audio` | Stream the converted WAV (`Range` supported, for per-turn playback) |
+| `WS` | `/api/v1/stt/live` | Live recording proxy to `sst_v1` (remote mode only) |
 | `POST` | `/api/v1/comprehend/entities` | Transcript → Comprehend Medical entities |
-| `POST` | `/api/v1/soap/generate` | Entities → SOAP markdown |
+| `POST` | `/api/v1/soap/create` | Transcript → Comprehend → Aava job (`202`) |
+| `GET` | `/api/v1/soap/jobs/{soap_job_id}` | Poll SOAP job status |
+| `GET` | `/api/v1/soap/notes/{soap_note_id}` | Persisted SOAP note |
+| `GET` | `/api/v1/soap/encounters/{encounter_id}` | Current SOAP note for an encounter |
+| `POST` | `/api/v1/soap/generate` | Entities → SOAP markdown (sync replay) |
 | `POST` | `/api/v1/pipeline` | Audio or transcript → entities + SOAP |
 
 ## Tests
 
 ```bash
-uv run pytest -q
+uv run pytest -q -m "not real_model"   # fast, no model weights needed
+uv run pytest -q -m real_model         # real SpeechBrain + Whisper end to end
 ```
+
+`real_model` tests load real weights and run against the audio fixtures in
+`../sst_v1/data/diar_testset/`; they skip themselves when the fixtures, ffmpeg,
+or the `stt` extra are missing.

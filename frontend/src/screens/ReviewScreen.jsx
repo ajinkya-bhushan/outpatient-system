@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createSoap, getSoapNoteForEncounter, sectionText } from '../api/soap.js';
 import AppSidebar from '../components/AppSidebar.jsx';
 import Icon from '../components/Icon.jsx';
 import ReviewNoteCard from '../components/ReviewNoteCard.jsx';
@@ -6,15 +7,70 @@ import StatusBadge from '../components/StatusBadge.jsx';
 import SuggestedCode from '../components/SuggestedCode.jsx';
 import { patient } from '../data/clinicalData.js';
 
-function ReviewScreen({ go, sidebarCollapsed, onToggleSidebar }) {
+function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSidebar }) {
   const [planAccepted, setPlanAccepted] = useState(false);
-  const [plan, setPlan] = useState([
-    '- Continue Lisinopril 20mg PO daily.',
-    '- Emphasized the importance of continued dietary sodium restriction and regular aerobic exercise.',
-    '- Advised patient to continue home blood pressure monitoring and keep a log.',
-    '- Re-check Basic Metabolic Panel (BMP) to monitor renal function and potassium levels.',
-    '- Regarding muscle aches, will hold Atorvastatin for 2 weeks to see if symptoms resolve, then reconsider rechallenge or alternative agent.',
-  ].join('\n'));
+  const [showTranscript, setShowTranscript] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
+  const [loadError, setLoadError] = useState(null);
+  const [soapNote, setSoapNote] = useState(session.soapNote);
+  const [plan, setPlan] = useState(sectionText(session.soapNote, 'plan'));
+
+  useEffect(() => {
+    setSoapNote(session.soapNote);
+    setPlan(sectionText(session.soapNote, 'plan'));
+    setPlanAccepted(false);
+  }, [session.soapNote]);
+
+  useEffect(() => {
+    if (session.soapNote || !session.encounterId) {
+      return undefined;
+    }
+    const controller = new AbortController();
+    getSoapNoteForEncounter(session.encounterId, { signal: controller.signal })
+      .then((note) => {
+        setSoapNote(note);
+        setPlan(sectionText(note, 'plan'));
+        setSession((current) => ({ ...current, soapNote: note }));
+      })
+      .catch((cause) => {
+        if (cause.name !== 'AbortError') {
+          setLoadError(cause.message);
+        }
+      });
+    return () => controller.abort();
+  }, [session.soapNote, session.encounterId, setSession]);
+
+  const regenerate = async () => {
+    if (!session.transcript) {
+      go('generation');
+      return;
+    }
+    setRegenerating(true);
+    setLoadError(null);
+    try {
+      const job = await createSoap({
+        transcript: session.transcript,
+        jobId: session.sttJobId,
+        encounterId: session.encounterId,
+      });
+      setSession((current) => ({
+        ...current,
+        soapJobId: job.soap_job_id,
+        encounterId: job.encounter_id,
+        soapNote: job.soap_note,
+      }));
+      go('generation');
+    } catch (cause) {
+      setLoadError(cause.message);
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
+  const subjective = sectionText(soapNote, 'subjective');
+  const objective = sectionText(soapNote, 'objective');
+  const assessment = sectionText(soapNote, 'assessment');
+  const emptyDraft = !soapNote && !loadError;
 
   return (
     <div className={`review-workspace ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
@@ -33,47 +89,55 @@ function ReviewScreen({ go, sidebarCollapsed, onToggleSidebar }) {
 
         <section className="review-patient-banner">
           <div>
-            <span>AI draft ready for review</span>
+            <span>{soapNote ? 'AI draft ready for review' : 'No SOAP draft yet'}</span>
             <h2>{patient.name}</h2>
             <p>Cardiology Follow-up - MRN {patient.mrn} - Aug 19, 2026</p>
           </div>
-          <StatusBadge tone="urgent">Needs physician review</StatusBadge>
+          <StatusBadge tone={soapNote ? 'urgent' : 'neutral'}>
+            {soapNote ? 'Needs physician review' : 'Waiting for draft'}
+          </StatusBadge>
         </section>
+
+        {loadError ? (
+          <p className="review-load-error" role="alert">{loadError}</p>
+        ) : null}
+
+        {emptyDraft ? (
+          <p className="review-empty-hint">
+            Generate a note from a recorded encounter to review the SOAP draft here.
+          </p>
+        ) : null}
 
         <ReviewNoteCard
           title="Subjective"
           icon="chat_bubble"
           action={(
-            <button type="button" className="review-text-button">
+            <button
+              type="button"
+              className={`review-text-button ${showTranscript ? 'active' : ''}`}
+              onClick={() => setShowTranscript((value) => !value)}
+              disabled={!session.transcript}
+            >
               <Icon name="mic" />
               Transcript
             </button>
           )}
         >
-          <p>
-            Patient presents for cardiology follow-up. Reports improved exercise tolerance since last visit, but still notes intermittent fatigue in the evenings. Denies shortness of breath at rest, palpitations, syncope, or dizziness.
-          </p>
-          <div className="review-verify-block">
-            <span><Icon name="warning" />Verify patient wording</span>
-            <p>Single episode of mild chest tightness while climbing stairs yesterday, lasting approximately 2 minutes and resolving with rest.</p>
-          </div>
+          <p className="review-section-text">{subjective || 'No subjective section in this draft.'}</p>
+          {showTranscript && session.transcript ? (
+            <div className="review-transcript-block">
+              <span><Icon name="mic" />Source transcript</span>
+              <pre>{session.transcript}</pre>
+            </div>
+          ) : null}
+        </ReviewNoteCard>
+
+        <ReviewNoteCard title="Objective" icon="stethoscope">
+          <p className="review-section-text">{objective || 'No objective section in this draft.'}</p>
         </ReviewNoteCard>
 
         <ReviewNoteCard title="Assessment" icon="monitor_heart">
-          <ol className="review-assessment-list">
-            <li>
-              <strong>Essential Hypertension (I10)</strong>
-              <p>Improved but not yet at target. Home blood pressure log shows readings averaging 132-138 systolic.</p>
-            </li>
-            <li>
-              <strong>Hyperlipidemia (E78.5)</strong>
-              <p>Stable on Atorvastatin.</p>
-              <div className="review-verify-block compact">
-                <span><Icon name="info" />Match found in transcript</span>
-                <p>Patient noted mild muscle aches in legs, possibly statin-related, though recent CK levels were normal.</p>
-              </div>
-            </li>
-          </ol>
+          <p className="review-section-text">{assessment || 'No assessment section in this draft.'}</p>
         </ReviewNoteCard>
 
         <ReviewNoteCard
@@ -81,10 +145,21 @@ function ReviewScreen({ go, sidebarCollapsed, onToggleSidebar }) {
           icon="description"
           action={(
             <div className="review-card-actions">
-              <button type="button" aria-label="Regenerate plan" className="icon-button">
+              <button
+                type="button"
+                aria-label="Regenerate plan"
+                className="icon-button"
+                onClick={regenerate}
+                disabled={!session.transcript || regenerating}
+              >
                 <Icon name="sync" />
               </button>
-              <button type="button" className={`review-accept-button ${planAccepted ? 'accepted' : ''}`} onClick={() => setPlanAccepted(true)}>
+              <button
+                type="button"
+                className={`review-accept-button ${planAccepted ? 'accepted' : ''}`}
+                onClick={() => setPlanAccepted(true)}
+                disabled={!plan}
+              >
                 {planAccepted ? 'Accepted' : 'Accept'}
               </button>
             </div>
@@ -118,7 +193,7 @@ function ReviewScreen({ go, sidebarCollapsed, onToggleSidebar }) {
         <button type="button" className="button button-outline" onClick={() => go('schedule')}>
           Save as Draft
         </button>
-        <button type="button" className="button button-primary button-xl" onClick={() => go('sync')}>
+        <button type="button" className="button button-primary button-xl" onClick={() => go('sync')} disabled={!soapNote}>
           <Icon name="cloud_sync" />
           Approve &amp; Sync
         </button>

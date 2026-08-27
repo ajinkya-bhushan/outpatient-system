@@ -30,6 +30,11 @@ class ConfigurationError(AppError):
         super().__init__(message, status_code=503)
 
 
+class NotFound(AppError):
+    def __init__(self, message: str = "Not found") -> None:
+        super().__init__(message, status_code=404)
+
+
 class InvalidCredentials(AppError):
     def __init__(self, message: str = "Invalid provider ID or password") -> None:
         super().__init__(message, status_code=401)

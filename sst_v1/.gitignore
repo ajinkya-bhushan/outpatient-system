@@ -57,6 +57,23 @@ recordings/
 *.aac
 *.opus
 
+# ── Downloaded speech corpora (hundreds of MB, re-downloaded on demand) ───────
+# mini-LibriSpeech, fetched by scripts/prepare_diar_testset.py to build the
+# diarization fixtures. Never commit the corpus or its archive.
+data/LibriSpeech/
+data/*.tar.gz
+data/*.tgz
+data/*.zip
+
+# ── Generated diarization testset (rebuild with prepare_diar_testset.py) ──────
+# Mixes: wav + RTTM + ref/labelled transcripts + JSON manifests.
+# Audio/JSON were already ignored globally; the .ref.txt / .labelled.txt / .rttm
+# were slipping through and bloating git.
+data/diar_testset/
+*.rttm
+*.ref.txt
+*.labelled.txt
+
 # ── Temporary transcription files (created by live WebSocket route) ───────────
 sst_live_*.webm
 sst_live_*.wav

@@ -1,7 +1,11 @@
 const TOKEN_KEY = 'docconnect_token';
 
 export function getApiBase() {
-  return import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:10200';
+  const configured = import.meta.env.VITE_API_BASE_URL;
+  if (configured === 'same-origin') {
+    return '';
+  }
+  return configured || 'http://127.0.0.1:10200';
 }
 
 export function getToken() {

@@ -15,4 +15,4 @@ def test_ready_reports_modules() -> None:
     response = client.get("/api/v1/ready")
     assert response.status_code == 200
     body = response.json()
-    assert body["modules"] == ["stt", "medical_comprehend", "generate_soap"]
+    assert body["modules"] == ["stt", "diarization", "medical_comprehend", "generate_soap"]

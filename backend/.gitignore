@@ -2,8 +2,18 @@
 __pycache__/
 *.pyc
 .env
+.env.*
+!.env.example
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
 dist/
 build/
+*.tmp
+*.temp
+*.bak
+*.log
+
+# Encounter audio (PHI), persisted results, and downloaded model weights
+data/audio/
+data/models/

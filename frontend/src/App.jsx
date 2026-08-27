@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { getToken } from './api/auth.js';
 import { screens } from './data/clinicalData.js';
 import ClinicalShell from './layouts/ClinicalShell.jsx';
@@ -10,6 +10,30 @@ import RecordingScreen from './screens/RecordingScreen.jsx';
 import ReviewScreen from './screens/ReviewScreen.jsx';
 import ScheduleScreen from './screens/ScheduleScreen.jsx';
 import SyncScreen from './screens/SyncScreen.jsx';
+
+const SESSION_KEY = 'docconnect_encounter_session';
+
+function emptySession() {
+  return {
+    transcript: '',
+    sttJobId: null,
+    soapJobId: null,
+    encounterId: null,
+    soapNote: null,
+  };
+}
+
+function readSession() {
+  if (typeof window === 'undefined') {
+    return emptySession();
+  }
+  try {
+    const raw = window.sessionStorage.getItem(SESSION_KEY);
+    return raw ? { ...emptySession(), ...JSON.parse(raw) } : emptySession();
+  } catch {
+    return emptySession();
+  }
+}
 
 function getInitialScreen() {
   if (typeof window === 'undefined') {
@@ -30,6 +54,19 @@ function App() {
   const [screen, setScreen] = useState(getInitialScreen);
   const [role, setRole] = useState('Physician');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [session, setSessionState] = useState(readSession);
+
+  const setSession = useCallback((update) => {
+    setSessionState((current) => {
+      const next = typeof update === 'function' ? update(current) : { ...current, ...update };
+      try {
+        window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(next));
+      } catch {
+        // Ignore quota / private-mode failures; in-memory session still works.
+      }
+      return next;
+    });
+  }, []);
 
   const toggleSidebar = () => setSidebarCollapsed((value) => !value);
 
@@ -57,15 +94,15 @@ function App() {
   }
 
   if (screen === 'recording') {
-    return <RecordingScreen go={go} {...sidebarProps} />;
+    return <RecordingScreen go={go} setSession={setSession} {...sidebarProps} />;
   }
 
   if (screen === 'generation') {
-    return <GenerationScreen go={go} {...sidebarProps} />;
+    return <GenerationScreen go={go} session={session} setSession={setSession} {...sidebarProps} />;
   }
 
   if (screen === 'review') {
-    return <ReviewScreen go={go} {...sidebarProps} />;
+    return <ReviewScreen go={go} session={session} setSession={setSession} {...sidebarProps} />;
   }
 
   if (screen === 'sync') {

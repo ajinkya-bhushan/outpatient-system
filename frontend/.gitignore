@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.vite/
 vite.log
 vite.err
 page*.png
@@ -7,4 +8,13 @@ check-*.png
 edge-profile*/
 tmp-ssr.cjs
 .env
+.env.*
+!.env.example
 .DS_Store
+*.log
+coverage/
+playwright-report/
+test-results/
+*.tmp
+*.temp
+*.bak
