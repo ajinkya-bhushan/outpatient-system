@@ -1845,7 +1845,7 @@ code {
   gap: 14px;
 }
 
-.review-note-card h2 {
+.review-note-card > header h2 {
   margin: 0;
   display: inline-flex;
   align-items: center;
@@ -1855,7 +1855,7 @@ code {
   line-height: 1;
 }
 
-.review-note-card h2 .icon {
+.review-note-card > header h2 .icon {
   width: 28px;
   height: 28px;
 }
@@ -1875,6 +1875,60 @@ code {
 
 .review-section-text {
   white-space: pre-wrap;
+}
+
+.review-note-markdown {
+  min-width: 0;
+  color: #20242b;
+}
+
+.review-note-markdown h2 {
+  margin: 22px 0 8px;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.review-note-markdown h2:first-child,
+.review-note-markdown > :first-child {
+  margin-top: 0;
+}
+
+.review-note-body .review-note-markdown p {
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+
+.review-note-markdown p:last-child,
+.review-note-markdown ul:last-child,
+.review-note-markdown ol:last-child {
+  margin-bottom: 0;
+}
+
+.review-note-markdown strong {
+  color: #12151a;
+  font-weight: 700;
+}
+
+.review-note-markdown .review-note-list {
+  margin: 0 0 12px;
+  padding-left: 1.35em;
+}
+
+.review-note-markdown li {
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+
+.review-note-markdown li .review-note-list {
+  margin: 6px 0 2px;
+}
+
+.review-note-markdown hr {
+  margin: 16px 0;
+  border: 0;
+  border-top: 1px solid #e5e8ef;
 }
 
 .review-transcript-block {
@@ -2833,7 +2887,7 @@ code {
     padding-left: 12px;
   }
 
-  .review-note-card h2 {
+  .review-note-card > header h2 {
     font-size: 18px;
   }
 

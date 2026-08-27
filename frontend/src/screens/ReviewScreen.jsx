@@ -9,6 +9,7 @@ import { patient } from '../data/clinicalData.js';
 
 function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSidebar }) {
   const [planAccepted, setPlanAccepted] = useState(false);
+  const [editingPlan, setEditingPlan] = useState(false);
   const [showTranscript, setShowTranscript] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [loadError, setLoadError] = useState(null);
@@ -19,6 +20,7 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
     setSoapNote(session.soapNote);
     setPlan(sectionText(session.soapNote, 'plan'));
     setPlanAccepted(false);
+    setEditingPlan(false);
   }, [session.soapNote]);
 
   useEffect(() => {
@@ -111,6 +113,7 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
         <ReviewNoteCard
           title="Subjective"
           icon="chat_bubble"
+          markdown={subjective || 'No subjective section in this draft.'}
           action={(
             <button
               type="button"
@@ -123,7 +126,6 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
             </button>
           )}
         >
-          <p className="review-section-text">{subjective || 'No subjective section in this draft.'}</p>
           {showTranscript && session.transcript ? (
             <div className="review-transcript-block">
               <span><Icon name="mic" />Source transcript</span>
@@ -132,17 +134,22 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
           ) : null}
         </ReviewNoteCard>
 
-        <ReviewNoteCard title="Objective" icon="stethoscope">
-          <p className="review-section-text">{objective || 'No objective section in this draft.'}</p>
-        </ReviewNoteCard>
+        <ReviewNoteCard
+          title="Objective"
+          icon="stethoscope"
+          markdown={objective || 'No objective section in this draft.'}
+        />
 
-        <ReviewNoteCard title="Assessment" icon="monitor_heart">
-          <p className="review-section-text">{assessment || 'No assessment section in this draft.'}</p>
-        </ReviewNoteCard>
+        <ReviewNoteCard
+          title="Assessment"
+          icon="monitor_heart"
+          markdown={assessment || 'No assessment section in this draft.'}
+        />
 
         <ReviewNoteCard
           title="Plan"
           icon="description"
+          markdown={editingPlan ? undefined : (plan || 'No plan section in this draft.')}
           action={(
             <div className="review-card-actions">
               <button
@@ -156,8 +163,19 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
               </button>
               <button
                 type="button"
+                className={`review-text-button ${editingPlan ? 'active' : ''}`}
+                onClick={() => setEditingPlan((value) => !value)}
+              >
+                <Icon name={editingPlan ? 'check' : 'edit'} />
+                {editingPlan ? 'Done' : 'Edit'}
+              </button>
+              <button
+                type="button"
                 className={`review-accept-button ${planAccepted ? 'accepted' : ''}`}
-                onClick={() => setPlanAccepted(true)}
+                onClick={() => {
+                  setEditingPlan(false);
+                  setPlanAccepted(true);
+                }}
                 disabled={!plan}
               >
                 {planAccepted ? 'Accepted' : 'Accept'}
@@ -165,15 +183,18 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
             </div>
           )}
         >
-          <textarea
-            aria-label="Edit plan"
-            className="review-plan-editor"
-            value={plan}
-            onChange={(event) => {
-              setPlanAccepted(false);
-              setPlan(event.target.value);
-            }}
-          />
+          {editingPlan ? (
+            <textarea
+              aria-label="Edit plan"
+              className="review-plan-editor"
+              value={plan}
+              autoFocus
+              onChange={(event) => {
+                setPlanAccepted(false);
+                setPlan(event.target.value);
+              }}
+            />
+          ) : null}
         </ReviewNoteCard>
       </main>
 
