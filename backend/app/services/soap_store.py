@@ -58,12 +58,14 @@ def _note_to_out(note: SoapNote, markdown: str | None = None) -> SoapNoteOut:
         SoapSectionOut(section_type=name, ai_generated_text=by_type.get(name) or "")
         for name in SECTION_ORDER
     ]
-    body = markdown or sections_to_markdown({item.section_type: item.ai_generated_text for item in sections})
+    body = markdown or note.full_markdown or sections_to_markdown({item.section_type: item.ai_generated_text for item in sections})
     return SoapNoteOut(
         id=str(note.id),
         status=note.status,
         soap_markdown=body,
         sections=sections,
+        conversation_text=note.conversation_text,
+        full_markdown=note.full_markdown,
     )
 
 
@@ -71,6 +73,7 @@ def persist_soap_note(
     encounter_id: str,
     markdown: str,
     sections: list[dict[str, str]],
+    conversation_text: str | None = None,
 ) -> SoapNoteOut:
     _require_database()
     enc_uuid = UUID(encounter_id)
@@ -94,6 +97,11 @@ def persist_soap_note(
             note.approved_at = None
             session.execute(delete(SoapNoteSection).where(SoapNoteSection.soap_note_id == note.id))
             session.flush()
+
+        # Persist the raw conversation transcript and full SOAP markdown.
+        if conversation_text is not None:
+            note.conversation_text = conversation_text
+        note.full_markdown = markdown
 
         for section in sections:
             session.add(

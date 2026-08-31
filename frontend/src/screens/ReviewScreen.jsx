@@ -119,17 +119,17 @@ function ReviewScreen({ go, session, setSession, sidebarCollapsed, onToggleSideb
               type="button"
               className={`review-text-button ${showTranscript ? 'active' : ''}`}
               onClick={() => setShowTranscript((value) => !value)}
-              disabled={!session.transcript}
+              disabled={!session.transcript && !soapNote?.conversation_text}
             >
               <Icon name="mic" />
               Transcript
             </button>
           )}
         >
-          {showTranscript && session.transcript ? (
+          {showTranscript && (session.transcript || soapNote?.conversation_text) ? (
             <div className="review-transcript-block">
               <span><Icon name="mic" />Source transcript</span>
-              <pre>{session.transcript}</pre>
+              <pre>{session.transcript || soapNote.conversation_text}</pre>
             </div>
           ) : null}
         </ReviewNoteCard>

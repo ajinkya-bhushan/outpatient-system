@@ -147,7 +147,7 @@ def run_job(job_id: str) -> None:
         markdown = result["soap_markdown"]
         parsed = parse_soap_markdown(markdown)
         section_rows = sections_as_list(parsed)
-        note = soap_store.persist_soap_note(job.encounter_id, markdown, section_rows)
+        note = soap_store.persist_soap_note(job.encounter_id, markdown, section_rows, conversation_text=job.transcript)
         with _lock:
             job.execution_id = result.get("execution_id")
             job.soap_markdown = markdown

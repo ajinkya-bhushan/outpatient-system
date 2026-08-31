@@ -168,6 +168,8 @@ class SoapNote(Base):
     )
     status: Mapped[str] = mapped_column(String, nullable=False)
     approved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    conversation_text: Mapped[str | None] = mapped_column(Text)
+    full_markdown: Mapped[str | None] = mapped_column(Text)
 
     encounter: Mapped[Encounter] = relationship(back_populates="soap_note")
     sections: Mapped[list[SoapNoteSection]] = relationship(back_populates="soap_note")

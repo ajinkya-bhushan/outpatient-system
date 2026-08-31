@@ -66,6 +66,8 @@ class SoapNoteOut(BaseModel):
     status: str
     soap_markdown: str
     sections: list[SoapSectionOut]
+    conversation_text: str | None = None
+    full_markdown: str | None = None
 
 
 class SoapJobError(BaseModel):
