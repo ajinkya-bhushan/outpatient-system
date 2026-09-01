@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite';
 
-const port = Number(process.env.PORT || 10100);
-const apiTarget = process.env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:10200';
+const port = Number(process.env.PORT || 5173);
+const apiTarget = process.env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:18000';
+
+const host = process.env.HOST || '127.0.0.1';
 
 export default defineConfig({
   server: {
-    host: '0.0.0.0',
+    host,
     port,
     strictPort: true,
     allowedHosts: true,
@@ -14,7 +16,7 @@ export default defineConfig({
     },
   },
   preview: {
-    host: '0.0.0.0',
+    host,
     port,
     strictPort: true,
     allowedHosts: true,

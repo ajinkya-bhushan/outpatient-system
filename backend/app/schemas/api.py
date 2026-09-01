@@ -28,6 +28,22 @@ class EntityExtractionResponse(BaseModel):
     entities: list[dict[str, Any]]
 
 
+class InferIcd10Response(BaseModel):
+    """AWS InferICD10CM response: medical conditions linked to ICD-10-CM codes."""
+
+    Entities: list[dict[str, Any]] = Field(default_factory=list)
+    PaginationToken: str | None = None
+    ModelVersion: str | None = None
+
+
+class InferRxNormResponse(BaseModel):
+    """AWS InferRxNorm response: medications linked to RxNorm concept IDs."""
+
+    Entities: list[dict[str, Any]] = Field(default_factory=list)
+    PaginationToken: str | None = None
+    ModelVersion: str | None = None
+
+
 class SoapGenerateRequest(BaseModel):
     entities: list[dict[str, Any]] | None = None
     encounter_id: str | None = None

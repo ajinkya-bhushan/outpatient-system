@@ -78,6 +78,8 @@ in remote mode.
 | `GET` | `/api/v1/stt/jobs/{job_id}/audio` | Stream the converted WAV (`Range` supported, for per-turn playback) |
 | `WS` | `/api/v1/stt/live` | Live recording proxy to `sst_v1` (remote mode only) |
 | `POST` | `/api/v1/comprehend/entities` | Transcript → Comprehend Medical entities |
+| `POST` | `/api/v1/comprehend/icd10` | Transcript → InferICD10CM entities and ICD-10-CM codes |
+| `POST` | `/api/v1/comprehend/rxnorm` | Transcript → InferRxNorm entities and RxNorm concept IDs |
 | `POST` | `/api/v1/soap/create` | Transcript → Comprehend → Aava job (`202`) |
 | `GET` | `/api/v1/soap/jobs/{soap_job_id}` | Poll SOAP job status |
 | `GET` | `/api/v1/soap/notes/{soap_note_id}` | Persisted SOAP note |

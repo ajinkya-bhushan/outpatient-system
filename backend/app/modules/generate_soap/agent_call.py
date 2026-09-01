@@ -4,7 +4,8 @@ Source: soap_create/agent_call.py
 
 The Aava execute API rejects application/json file uploads, so the payload is
 sent as text/plain. The agent reads the upload from the capital-F ``Files``
-field and the ``{{input1}}`` userInputs placeholder.
+field and the ``{{input1}}`` userInputs placeholder. SOAP create uploads
+DetectEntitiesV2 plus InferICD10CM / InferRxNorm codes with confidence.
 """
 
 from __future__ import annotations
@@ -45,7 +46,7 @@ def _auth_headers() -> dict[str, str]:
     }
 
 
-def _as_text(entities: list[dict[str, Any]] | str) -> str:
+def _as_text(entities: list[dict[str, Any]] | dict[str, Any] | str) -> str:
     if isinstance(entities, str):
         text = entities.strip()
     else:
@@ -56,7 +57,7 @@ def _as_text(entities: list[dict[str, Any]] | str) -> str:
 
 
 def submit(
-    entities: list[dict[str, Any]] | str,
+    entities: list[dict[str, Any]] | dict[str, Any] | str,
     user_inputs: dict[str, str] | None = None,
     send_execution_id: bool = False,
 ) -> str:
@@ -144,7 +145,7 @@ def poll(
 
 
 def generate_soap_note(
-    entities: list[dict[str, Any]] | str,
+    entities: list[dict[str, Any]] | dict[str, Any] | str,
     user_inputs: dict[str, str] | None = None,
     timeout: int | None = None,
     interval: int | None = None,

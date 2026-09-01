@@ -513,8 +513,12 @@ async def test_pipeline_upload_seam_is_unchanged(monkeypatch) -> None:
     monkeypatch.setattr(STTService, "transcribe_upload", fake_transcribe_upload)
     monkeypatch.setattr(
         pipeline_service,
-        "detect_entities",
-        lambda text: [{"Text": "fever", "Category": "MEDICAL_CONDITION"}],
+        "build_aava_payload",
+        lambda text: {
+            "entities": [{"Text": "fever", "Category": "MEDICAL_CONDITION"}],
+            "icd10": [],
+            "rxnorm": [],
+        },
     )
     monkeypatch.setattr(
         pipeline_service,

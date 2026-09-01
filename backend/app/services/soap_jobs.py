@@ -12,7 +12,7 @@ from app.core.errors import ConfigurationError, NotFound, ValidationFailed
 from app.core.logging import get_logger
 from app.modules.generate_soap.agent_call import generate_soap_note
 from app.modules.generate_soap.parse import parse_soap_markdown, sections_as_list
-from app.modules.medical_comprehend.app import detect_entities, summarize_entities
+from app.modules.medical_comprehend.app import build_aava_payload, summarize_entities
 from app.schemas.api import (
     SoapJobError,
     SoapJobResponse,
@@ -133,7 +133,8 @@ def run_job(job_id: str) -> None:
 
     _set_status(job, "extracting")
     try:
-        entities = detect_entities(job.transcript)
+        payload = build_aava_payload(job.transcript)
+        entities = payload.get("entities") or []
         with _lock:
             job.entity_count = len(entities)
             job.category_counts = summarize_entities(entities)
@@ -143,7 +144,7 @@ def run_job(job_id: str) -> None:
 
     _set_status(job, "generating")
     try:
-        result = generate_soap_note(entities, user_inputs=job.user_inputs)
+        result = generate_soap_note(payload, user_inputs=job.user_inputs)
         markdown = result["soap_markdown"]
         parsed = parse_soap_markdown(markdown)
         section_rows = sections_as_list(parsed)

@@ -43,8 +43,22 @@ def _stub_create(monkeypatch, markdown: str = _MINI_NOTE) -> None:
     monkeypatch.setattr(soap_jobs, "enqueue", soap_jobs.run_job)
     monkeypatch.setattr(
         soap_jobs,
-        "detect_entities",
-        lambda text: [{"Text": "fever", "Category": "MEDICAL_CONDITION"}],
+        "build_aava_payload",
+        lambda text: {
+            "entities": [{"Text": "fever", "Category": "MEDICAL_CONDITION"}],
+            "icd10": [
+                {
+                    "text": "fever",
+                    "code": "R50.9",
+                    "description": "Fever, unspecified",
+                    "confidence": 0.7,
+                    "entity_confidence": 0.9,
+                    "traits": ["SYMPTOM"],
+                    "negated": False,
+                }
+            ],
+            "rxnorm": [],
+        },
     )
     monkeypatch.setattr(
         soap_jobs,
@@ -152,6 +166,33 @@ def test_soap_create_job_completes(monkeypatch) -> None:
     assert polled.json()["soap_note_id"] == "00000000-0000-0000-0000-000000000001"
 
 
+def test_soap_create_sends_icd10_and_rxnorm_to_aava(monkeypatch) -> None:
+    captured: dict = {}
+    _stub_create(monkeypatch)
+
+    def fake_generate(payload, user_inputs=None, timeout=None, interval=None):
+        captured["payload"] = payload
+        return {
+            "execution_id": "exec-codes",
+            "status": "SUCCESS",
+            "agent_name": "SOAP Agent",
+            "created_at": None,
+            "soap_markdown": _MINI_NOTE,
+        }
+
+    monkeypatch.setattr(soap_jobs, "generate_soap_note", fake_generate)
+    response = client.post(
+        "/api/v1/soap/create",
+        json={"transcript": "Doctor: What brings you in?\nPatient: Fever for four days."},
+    )
+    assert response.status_code == 202
+    payload = captured["payload"]
+    assert payload["icd10"][0]["code"] == "R50.9"
+    assert payload["icd10"][0]["confidence"] == 0.7
+    assert payload["rxnorm"] == []
+    assert payload["entities"][0]["Text"] == "fever"
+
+
 def test_soap_job_unknown() -> None:
     response = client.get("/api/v1/soap/jobs/does-not-exist")
     assert response.status_code == 404
@@ -163,7 +204,7 @@ def test_soap_create_failed_job(monkeypatch) -> None:
     def boom(_text: str):
         raise ValidationFailed("Transcript text is empty.")
 
-    monkeypatch.setattr(soap_jobs, "detect_entities", boom)
+    monkeypatch.setattr(soap_jobs, "build_aava_payload", boom)
     response = client.post(
         "/api/v1/soap/create",
         json={"transcript": "Doctor: Hello.\nPatient: Hi."},
