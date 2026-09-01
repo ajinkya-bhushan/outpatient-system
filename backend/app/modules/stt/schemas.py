@@ -96,9 +96,10 @@ class AudioMeta(BaseModel):
     duration: float = Field(description="Audio length in seconds")
     sample_rate: int = Field(default=16_000, description="Sample rate the models consumed")
     size_bytes: int = Field(description="Size of the uploaded bytes")
-    stored: bool = Field(description="Whether the audio was persisted to disk")
+    stored: bool = Field(description="Whether the audio was persisted")
     stored_path: str | None = Field(
-        default=None, description="Server-side path of the converted WAV, when persisted"
+        default=None,
+        description="Server-side path or s3:// object URI of the converted WAV, when persisted",
     )
 
 

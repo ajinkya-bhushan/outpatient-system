@@ -26,12 +26,13 @@ from fastapi import (
     Form,
     HTTPException,
     Query,
+    Request,
     UploadFile,
     WebSocket,
     WebSocketDisconnect,
     status,
 )
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 
 from app.api.errors import raise_app_error
 from app.core.config import settings
@@ -242,7 +243,7 @@ async def get_job(job_id: str) -> dict:
     response_class=FileResponse,
     summary="Stream a stored job's converted audio",
 )
-async def get_job_audio(job_id: str) -> FileResponse:
+async def get_job_audio(job_id: str, request: Request) -> FileResponse | StreamingResponse:
     """Stream the 16 kHz mono WAV a job was transcribed from.
 
     Clients play back individual turns by seeking to ``turn.start``, so this
@@ -253,6 +254,30 @@ async def get_job_audio(job_id: str) -> FileResponse:
     Starlette implements ``Range`` on ``FileResponse``, so seeking works
     without extra handling here.
     """
+    if storage.object_storage_enabled():
+        obj = storage.open_audio_stream(job_id, request.headers.get("range"))
+        if obj is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No stored audio for job {job_id!r}.",
+            )
+        headers = {
+            "Cache-Control": "private, no-store",
+            "Accept-Ranges": "bytes",
+        }
+        if obj.get("ContentRange"):
+            headers["Content-Range"] = obj["ContentRange"]
+        if obj.get("ContentLength") is not None:
+            headers["Content-Length"] = str(obj["ContentLength"])
+        return StreamingResponse(
+            obj["Body"].iter_chunks(),
+            status_code=status.HTTP_206_PARTIAL_CONTENT
+            if obj.get("ContentRange")
+            else status.HTTP_200_OK,
+            media_type=obj.get("ContentType") or "audio/wav",
+            headers=headers,
+        )
+
     wav_path = storage.job_audio_path(job_id)
     if wav_path is None:
         raise HTTPException(

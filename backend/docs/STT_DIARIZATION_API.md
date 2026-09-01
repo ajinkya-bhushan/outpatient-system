@@ -385,7 +385,13 @@ for a single request's inference time.
 | `DIARIZATION_SHIFT_SEC` | `0.75` | Sub-segment hop |
 | `DIARIZATION_VAD_SOURCE` | `speechbrain/vad-crdnn-libriparty` | VAD model |
 | `DIARIZATION_EMBEDDING_SOURCE` | `speechbrain/spkrec-ecapa-voxceleb` | Speaker-embedding model |
-| `AUDIO_STORAGE_DIR` | `backend/data/audio` | Where audio and results are written |
+| `AUDIO_STORAGE_DIR` | `backend/data/audio` | Where local audio and results are written when `OBJECT_STORAGE_PROVIDER=local` |
+| `OBJECT_STORAGE_PROVIDER` | `local` | `local`, `minio`, or `s3`; MinIO/S3 stores durable audio and transcript artifacts through S3-compatible APIs |
+| `OBJECT_STORAGE_ENDPOINT` |  | S3-compatible endpoint, e.g. `http://127.0.0.1:9000` for local MinIO |
+| `OBJECT_STORAGE_ACCESS_KEY` |  | Object storage access key |
+| `OBJECT_STORAGE_SECRET_KEY` |  | Object storage secret key |
+| `OBJECT_STORAGE_BUCKET` | `docconnect-encounters` | Bucket for encounter artifacts |
+| `OBJECT_STORAGE_PREFIX` | `stt-jobs` | Key prefix for STT job artifacts |
 | `MODEL_CACHE_DIR` | `backend/data/models` | Downloaded model weights |
 | `MAX_AUDIO_SIZE_MB` | `50` | Upload size ceiling |
 | `MAX_AUDIO_DURATION_SECONDS` | `3600` | Recording length ceiling |
@@ -411,7 +417,8 @@ Expect a real-time factor well above 1.0 on CPU with `small.en`.
 
 ## Local storage and PHI
 
-`save_audio=true` (the default) writes one directory per job:
+`save_audio=true` (the default) persists one job artifact set. With
+`OBJECT_STORAGE_PROVIDER=local`, it writes one directory per job:
 
 ```
 {AUDIO_STORAGE_DIR}/2026-08-27/<job_id>/
@@ -435,6 +442,23 @@ Log lines carry job ids, durations and sizes only, never transcript text.
 `save_audio=false` routes the audio through a temporary directory that is
 removed when the request finishes; the file still has to touch the disk because
 ffmpeg and SpeechBrain's VAD are file-based.
+
+With `OBJECT_STORAGE_PROVIDER=minio` or `s3`, the same durable artifacts are
+written to the configured bucket using this key shape:
+
+```
+{OBJECT_STORAGE_PREFIX}/2026-08-27/<job_id>/
+├── original.<ext>
+├── audio.wav
+├── result.json
+├── plain.txt
+└── labelled.txt
+```
+
+The backend still creates temporary local files during a request because
+ffmpeg, Whisper, and SpeechBrain consume file paths. Those temporary files are
+removed after the object upload completes. `/jobs/{job_id}/audio` streams the
+stored WAV through the API so clients do not need direct bucket credentials.
 
 ---
 

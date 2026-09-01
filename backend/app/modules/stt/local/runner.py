@@ -198,6 +198,8 @@ async def transcribe(
     finally:
         if prepared.cleanup is not None:
             prepared.cleanup.cleanup()
+        elif prepared.stored is not None and prepared.stored.cleanup is not None:
+            prepared.stored.cleanup.cleanup()
 
 
 # ── Transcription + diarization ───────────────────────────────────────────────
@@ -325,7 +327,7 @@ async def diarize(
                 sample_rate=TARGET_SAMPLE_RATE,
                 size_bytes=len(file_bytes),
                 stored=prepared.stored is not None,
-                stored_path=str(prepared.stored.wav_path) if prepared.stored else None,
+                stored_path=storage.audio_reference(prepared.stored),
             ),
             metrics=ProcessingMetrics(
                 audio_duration=round(duration, 3),
@@ -376,3 +378,5 @@ async def diarize(
     finally:
         if prepared.cleanup is not None:
             prepared.cleanup.cleanup()
+        elif prepared.stored is not None and prepared.stored.cleanup is not None:
+            prepared.stored.cleanup.cleanup()

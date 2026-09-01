@@ -1,6 +1,22 @@
 name: outpatient-system
 
 services:
+  minio:
+    image: minio/minio:latest
+    container_name: outpatient-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-docconnect}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-docconnect-dev-password}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
   backend:
     build:
       context: .
@@ -14,7 +30,6 @@ services:
         TORCH_INDEX_URL: ""
     image: outpatient-backend:latest
     container_name: outpatient-backend
-    network_mode: host
     restart: unless-stopped
     env_file:
       - .env
@@ -22,6 +37,9 @@ services:
     environment:
       HOST: "0.0.0.0"
       PORT: "10200"
+      OBJECT_STORAGE_ENDPOINT: "http://minio:9000"
+    ports:
+      - "10200:10200"
     volumes:
       # Encounter audio and transcription results. This is PHI: back it up and
       # encrypt it like any other patient data store, and see
@@ -51,9 +69,11 @@ services:
         VITE_API_BASE_URL: http://127.0.0.1:10200
     image: outpatient-frontend:latest
     container_name: outpatient-frontend
-    network_mode: host
     restart: unless-stopped
+    ports:
+      - "10100:10100"
 
 volumes:
   backend-audio:
   backend-models:
+  minio-data:

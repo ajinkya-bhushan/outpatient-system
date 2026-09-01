@@ -71,6 +71,17 @@ class Settings(BaseSettings):
     AUDIO_STORAGE_DIR: str = str(_BACKEND_DIR / "data" / "audio")
     MODEL_CACHE_DIR: str = str(_BACKEND_DIR / "data" / "models")
 
+    # S3-compatible object storage for persisted audio/transcript artifacts.
+    # Use OBJECT_STORAGE_PROVIDER=minio with the docker-compose MinIO service.
+    OBJECT_STORAGE_PROVIDER: Literal["local", "minio", "s3"] = "local"
+    OBJECT_STORAGE_ENDPOINT: str | None = None
+    OBJECT_STORAGE_ACCESS_KEY: str | None = None
+    OBJECT_STORAGE_SECRET_KEY: str | None = None
+    OBJECT_STORAGE_BUCKET: str = "docconnect-encounters"
+    OBJECT_STORAGE_REGION: str = "us-east-1"
+    OBJECT_STORAGE_SECURE: bool = False
+    OBJECT_STORAGE_PREFIX: str = "stt-jobs"
+
     AWS_ACCESS_KEY_ID: str | None = None
     AWS_SECRET_ACCESS_KEY: str | None = None
     AWS_DEFAULT_REGION: str = "us-east-1"
@@ -108,6 +119,10 @@ class Settings(BaseSettings):
     @property
     def stt_is_local(self) -> bool:
         return self.STT_ENGINE_MODE == "local"
+
+    @property
+    def object_storage_enabled(self) -> bool:
+        return self.OBJECT_STORAGE_PROVIDER in {"minio", "s3"}
 
     @property
     def resolved_stt_device(self) -> str:
