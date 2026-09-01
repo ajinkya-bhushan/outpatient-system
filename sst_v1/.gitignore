@@ -1,0 +1,157 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── uv ────────────────────────────────────────────────────────────────────────
+# Keep uv.lock committed for reproducible installs
+# uv.lock
+
+# ── Secrets – NEVER commit ────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets.json
+
+# ── AI / ML Model weights (very large files) ──────────────────────────────────
+# Whisper model weights (~39MB to 1.5GB) are cached by openai-whisper
+# in ~/.cache/whisper/ automatically. Do NOT commit them.
+*.pt
+*.pth
+*.bin
+*.onnx
+*.tflite
+*.safetensors
+*.gguf
+*.ggml
+models/
+model_cache/
+weights/
+
+# ── Whisper cache (if ever downloaded into project folder) ────────────────────
+.cache/
+whisper_cache/
+
+# ── Audio files – generated or recorded (can be regenerated via scripts/) ─────
+# Keep the folder structure, ignore the actual audio content.
+audio_samples/*
+!audio_samples/.gitkeep
+recordings/
+*.wav
+*.mp3
+*.mp4
+*.m4a
+*.ogg
+*.flac
+*.webm
+*.aac
+*.opus
+
+# ── Downloaded speech corpora (hundreds of MB, re-downloaded on demand) ───────
+# mini-LibriSpeech, fetched by scripts/prepare_diar_testset.py to build the
+# diarization fixtures. Never commit the corpus or its archive.
+data/LibriSpeech/
+data/*.tar.gz
+data/*.tgz
+data/*.zip
+
+# ── Generated diarization testset (rebuild with prepare_diar_testset.py) ──────
+# Mixes: wav + RTTM + ref/labelled transcripts + JSON manifests.
+# Audio/JSON were already ignored globally; the .ref.txt / .labelled.txt / .rttm
+# were slipping through and bloating git.
+data/diar_testset/
+*.rttm
+*.ref.txt
+*.labelled.txt
+
+# ── Temporary transcription files (created by live WebSocket route) ───────────
+sst_live_*.webm
+sst_live_*.wav
+tmp_audio/
+
+# ── Benchmark / evaluation results ────────────────────────────────────────────
+# Uncomment the line below if you DO want to track results in git:
+# results/
+results/
+benchmarks/output/
+*.csv
+*.json
+!pyproject.toml
+!*.example.json
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+*.log
+log/
+
+# ── Testing artifacts ─────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.lcov
+junit.xml
+test-results/
+
+# ── Build / distribution ──────────────────────────────────────────────────────
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ── Jupyter notebooks (output cells can contain large data) ───────────────────
+.ipynb_checkpoints/
+# Uncomment below if you don't want to track notebooks at all:
+# *.ipynb
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Streamlit ─────────────────────────────────────────────────────────────────
+.streamlit/secrets.toml
+
+# ── Docker (if added later) ───────────────────────────────────────────────────
+# .docker/
+# docker-compose.override.yml
+
+# ── Antigravity / AI IDE specific ─────────────────────────────────────────────
+.gemini/
+.agents/
+
+# ── Type-checking / linting cache ─────────────────────────────────────────────
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json

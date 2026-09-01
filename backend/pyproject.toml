@@ -1,0 +1,78 @@
+[project]
+name = "outpatient-backend"
+version = "0.1.0"
+description = "FastAPI backend for encounter capture, transcription, medical entity extraction, and SOAP generation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Outpatient System" }]
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27.0",
+    "websockets>=12.0",
+    "boto3>=1.34.0",
+    "requests>=2.32.0",
+    "loguru>=0.7.0",
+    "sqlalchemy>=2.0.0",
+    "psycopg2-binary>=2.9.9",
+    "bcrypt>=4.0.0",
+    "PyJWT>=2.8.0",
+]
+
+[project.optional-dependencies]
+# Local speech-to-text + speaker diarization (SpeechBrain + Whisper).
+#
+# Kept out of the base dependency set on purpose: this pulls in PyTorch and is
+# multiple gigabytes. Install it only where inference actually runs:
+#
+#   uv sync --extra stt
+#
+# With STT_ENGINE_MODE=remote the backend proxies to the sst_v1 service instead
+# and none of these packages are needed.
+#
+# GPU note: the torch wheel must target the host GPU architecture. Blackwell
+# (compute capability 12.0, e.g. RTX 50-series) needs a CUDA 12.8+ build:
+#   uv pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu128
+stt = [
+    "torch>=2.2.0",
+    "torchaudio>=2.2.0",
+    "speechbrain>=1.0.0",
+    "faster-whisper>=1.0.0",
+    "openai-whisper>=20231106",
+    "soundfile>=0.12.1",
+    "librosa>=0.10.0",
+    "scikit-learn>=1.4.0",
+    "scipy>=1.12.0",
+    "numpy>=1.26.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "ruff>=0.4.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "real_model: loads real SpeechBrain/Whisper weights and needs audio fixtures (deselect with -m 'not real_model')",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

@@ -1,0 +1,2382 @@
+[
+  {
+    "Id": 164,
+    "BeginOffset": 8,
+    "EndOffset": 25,
+    "Score": 0.5544604063034058,
+    "Text": "Outpatient Clinic",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "ADDRESS",
+    "Traits": []
+  },
+  {
+    "Id": 165,
+    "BeginOffset": 182,
+    "EndOffset": 186,
+    "Score": 0.8764230608940125,
+    "Text": "Gaia",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "NAME",
+    "Traits": []
+  },
+  {
+    "Id": 166,
+    "BeginOffset": 218,
+    "EndOffset": 222,
+    "Score": 0.9751169085502625,
+    "Text": "Gaia",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "NAME",
+    "Traits": []
+  },
+  {
+    "Id": 167,
+    "BeginOffset": 258,
+    "EndOffset": 260,
+    "Score": 0.9878656268119812,
+    "Text": "29",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "AGE",
+    "Traits": []
+  },
+  {
+    "Id": 1,
+    "BeginOffset": 346,
+    "EndOffset": 367,
+    "Score": 0.7613970637321472,
+    "Text": "feeling really unwell",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5296252369880676
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "BeginOffset": 376,
+    "EndOffset": 390,
+    "Score": 0.7172441482543945,
+    "Text": "past four days",
+    "Category": "TIME_EXPRESSION",
+    "Type": "TIME_TO_DX_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "DX_NAME",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "OVERLAP",
+        "Id": 1,
+        "BeginOffset": 346,
+        "EndOffset": 367,
+        "Text": "feeling really unwell",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": [
+          {
+            "Name": "SYMPTOM",
+            "Score": 0.5296252369880676
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": 4,
+    "BeginOffset": 406,
+    "EndOffset": 411,
+    "Score": 0.9584784507751465,
+    "Text": "fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9214484095573425
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7552722692489624,
+        "RelationshipType": "QUALITY",
+        "Id": 3,
+        "BeginOffset": 401,
+        "EndOffset": 405,
+        "Text": "high",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      },
+      {
+        "Type": "QUALITY",
+        "Score": 0.6603351831436157,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "QUALITY",
+        "Id": 5,
+        "BeginOffset": 417,
+        "EndOffset": 439,
+        "Text": "keeps coming and going",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 6,
+    "BeginOffset": 448,
+    "EndOffset": 452,
+    "Score": 0.7172441482543945,
+    "Text": "body",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 7,
+    "BeginOffset": 448,
+    "EndOffset": 458,
+    "Score": 0.9201511740684509,
+    "Text": "body aches",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8787732124328613
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.6795811653137207,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 6,
+        "BeginOffset": 448,
+        "EndOffset": 452,
+        "Text": "body",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 8,
+    "BeginOffset": 524,
+    "EndOffset": 541,
+    "Score": 0.6603351831436157,
+    "Text": "crushing my bones",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5296252369880676
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.821601390838623,
+        "RelationshipScore": 0.8386837244033813,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 9,
+        "BeginOffset": 536,
+        "EndOffset": 541,
+        "Text": "bones",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 9,
+    "BeginOffset": 536,
+    "EndOffset": 541,
+    "Score": 0.821601390838623,
+    "Text": "bones",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 10,
+    "BeginOffset": 579,
+    "EndOffset": 584,
+    "Score": 0.9584784507751465,
+    "Text": "fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6768204569816589
+      }
+    ]
+  },
+  {
+    "Id": 11,
+    "BeginOffset": 639,
+    "EndOffset": 650,
+    "Score": 0.7613970637321472,
+    "Text": "paracetamol",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 13,
+    "BeginOffset": 742,
+    "EndOffset": 750,
+    "Score": 0.9584784507751465,
+    "Text": "headache",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9013108015060425
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7950295805931091,
+        "RelationshipScore": 0.7552722692489624,
+        "RelationshipType": "QUALITY",
+        "Id": 12,
+        "BeginOffset": 735,
+        "EndOffset": 741,
+        "Text": "severe",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 15,
+    "BeginOffset": 876,
+    "EndOffset": 882,
+    "Score": 0.5971075296401978,
+    "Text": "Nausea",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.6248409748077393
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6248409748077393
+      }
+    ]
+  },
+  {
+    "Id": 16,
+    "BeginOffset": 884,
+    "EndOffset": 892,
+    "Score": 0.9584784507751465,
+    "Text": "vomiting",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.9817302823066711
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9596198797225952
+      }
+    ]
+  },
+  {
+    "Id": 17,
+    "BeginOffset": 894,
+    "EndOffset": 910,
+    "Score": 0.9584784507751465,
+    "Text": "loss of appetite",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.9817302823066711
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9214484095573425
+      }
+    ]
+  },
+  {
+    "Id": 18,
+    "BeginOffset": 915,
+    "EndOffset": 919,
+    "Score": 0.9350614547729492,
+    "Text": "rash",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.9596198797225952
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9013108015060425
+      }
+    ]
+  },
+  {
+    "Id": 19,
+    "BeginOffset": 949,
+    "EndOffset": 957,
+    "Score": 0.6603351831436157,
+    "Text": "nauseous",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6248409748077393
+      }
+    ]
+  },
+  {
+    "Id": 20,
+    "BeginOffset": 965,
+    "EndOffset": 972,
+    "Score": 0.90631103515625,
+    "Text": "vomited",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8530592322349548
+      }
+    ]
+  },
+  {
+    "Id": 21,
+    "BeginOffset": 979,
+    "EndOffset": 988,
+    "Score": 0.5971075296401978,
+    "Text": "yesterday",
+    "Category": "TIME_EXPRESSION",
+    "Type": "TIME_TO_DX_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "DX_NAME",
+        "Score": 0.90631103515625,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "OVERLAP",
+        "Id": 20,
+        "BeginOffset": 965,
+        "EndOffset": 972,
+        "Text": "vomited",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": [
+          {
+            "Name": "SYMPTOM",
+            "Score": 0.8530592322349548
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Id": 22,
+    "BeginOffset": 998,
+    "EndOffset": 1023,
+    "Score": 0.5971075296401978,
+    "Text": "feel like eating anything",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.5752319693565369
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5752319693565369
+      }
+    ]
+  },
+  {
+    "Id": 23,
+    "BeginOffset": 1028,
+    "EndOffset": 1032,
+    "Score": 0.9201511740684509,
+    "Text": "rash",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.9405226111412048
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9013108015060425
+      }
+    ]
+  },
+  {
+    "Id": 25,
+    "BeginOffset": 1079,
+    "EndOffset": 1084,
+    "Score": 0.9584784507751465,
+    "Text": "tired",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8787732124328613
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "QUALITY",
+        "Id": 24,
+        "BeginOffset": 1074,
+        "EndOffset": 1078,
+        "Text": "very",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 26,
+    "BeginOffset": 1089,
+    "EndOffset": 1093,
+    "Score": 0.9584784507751465,
+    "Text": "weak",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9405226111412048
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "QUALITY",
+        "Id": 24,
+        "BeginOffset": 1074,
+        "EndOffset": 1078,
+        "Text": "very",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 28,
+    "BeginOffset": 1111,
+    "EndOffset": 1117,
+    "Score": 0.8435389995574951,
+    "Text": "chills",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8203471899032593
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "QUALITY",
+        "Id": 27,
+        "BeginOffset": 1095,
+        "EndOffset": 1104,
+        "Text": "Sometimes",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 29,
+    "BeginOffset": 1201,
+    "EndOffset": 1213,
+    "Score": 0.8617406487464905,
+    "Text": "black stools",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.9013108015060425
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8787732124328613
+      }
+    ]
+  },
+  {
+    "Id": 31,
+    "BeginOffset": 1225,
+    "EndOffset": 1233,
+    "Score": 0.9201511740684509,
+    "Text": "bruising",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.8530592322349548
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9214484095573425
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "QUALITY",
+        "Id": 30,
+        "BeginOffset": 1217,
+        "EndOffset": 1224,
+        "Text": "unusual",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 32,
+    "BeginOffset": 1280,
+    "EndOffset": 1285,
+    "Score": 0.9584784507751465,
+    "Text": "fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6768204569816589
+      }
+    ]
+  },
+  {
+    "Id": 33,
+    "BeginOffset": 1287,
+    "EndOffset": 1291,
+    "Score": 0.8435389995574951,
+    "Text": "body",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 34,
+    "BeginOffset": 1287,
+    "EndOffset": 1296,
+    "Score": 0.9201511740684509,
+    "Text": "body pain",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8530592322349548
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.8435389995574951,
+        "RelationshipScore": 0.8534350991249084,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 33,
+        "BeginOffset": 1287,
+        "EndOffset": 1291,
+        "Text": "body",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 35,
+    "BeginOffset": 1298,
+    "EndOffset": 1306,
+    "Score": 0.9584784507751465,
+    "Text": "headache",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8787732124328613
+      }
+    ]
+  },
+  {
+    "Id": 36,
+    "BeginOffset": 1312,
+    "EndOffset": 1327,
+    "Score": 0.7950295805931091,
+    "Text": "feeling drained",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8203471899032593
+      }
+    ]
+  },
+  {
+    "Id": 37,
+    "BeginOffset": 1360,
+    "EndOffset": 1374,
+    "Score": 0.6603351831436157,
+    "Text": "mosquito bites",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 38,
+    "BeginOffset": 1407,
+    "EndOffset": 1415,
+    "Score": 0.9584784507751465,
+    "Text": "symptoms",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 39,
+    "BeginOffset": 1484,
+    "EndOffset": 1490,
+    "Score": 0.6603351831436157,
+    "Text": "bitten",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5296252369880676
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.6603351831436157,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "QUALITY",
+        "Id": 40,
+        "BeginOffset": 1491,
+        "EndOffset": 1502,
+        "Text": "quite often",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 41,
+    "BeginOffset": 1527,
+    "EndOffset": 1531,
+    "Score": 0.9584784507751465,
+    "Text": "sick",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.9817302823066711
+      },
+      {
+        "Name": "PERTAINS_TO_FAMILY",
+        "Score": 0.7299559712409973
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.7299559712409973
+      }
+    ]
+  },
+  {
+    "Id": 42,
+    "BeginOffset": 1597,
+    "EndOffset": 1608,
+    "Score": 0.7613970637321472,
+    "Text": "temperature",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 43,
+    "BeginOffset": 1610,
+    "EndOffset": 1615,
+    "Score": 0.8921527862548828,
+    "Text": "pulse",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 44,
+    "BeginOffset": 1617,
+    "EndOffset": 1631,
+    "Score": 0.90631103515625,
+    "Text": "blood pressure",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 45,
+    "BeginOffset": 1643,
+    "EndOffset": 1647,
+    "Score": 0.8617406487464905,
+    "Text": "rash",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9013108015060425
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6248409748077393
+      }
+    ]
+  },
+  {
+    "Id": 46,
+    "BeginOffset": 1660,
+    "EndOffset": 1670,
+    "Score": 0.9350614547729492,
+    "Text": "tenderness",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9596198797225952
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.7299559712409973
+      }
+    ]
+  },
+  {
+    "Id": 47,
+    "BeginOffset": 1685,
+    "EndOffset": 1694,
+    "Score": 0.7172441482543945,
+    "Text": "hydration",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.7299559712409973
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5296252369880676
+      }
+    ]
+  },
+  {
+    "Id": 48,
+    "BeginOffset": 1705,
+    "EndOffset": 1716,
+    "Score": 0.7613970637321472,
+    "Text": "temperature",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "TEST_VALUE",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "TEST_VALUE",
+        "Id": 50,
+        "BeginOffset": 1720,
+        "EndOffset": 1734,
+        "Text": "still elevated",
+        "Category": "TEST_TREATMENT_PROCEDURE",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 49,
+    "BeginOffset": 1705,
+    "EndOffset": 1734,
+    "Score": 0.5971075296401978,
+    "Text": "temperature is still elevated",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SIGN",
+        "Score": 0.5752319693565369
+      }
+    ]
+  },
+  {
+    "Id": 51,
+    "BeginOffset": 1736,
+    "EndOffset": 1741,
+    "Score": 0.7613970637321472,
+    "Text": "pulse",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "TEST_VALUE",
+        "Score": 0.6603351831436157,
+        "RelationshipScore": 0.6795811653137207,
+        "RelationshipType": "TEST_VALUE",
+        "Id": 53,
+        "BeginOffset": 1747,
+        "EndOffset": 1756,
+        "Text": "bit rapid",
+        "Category": "TEST_TREATMENT_PROCEDURE",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 52,
+    "BeginOffset": 1736,
+    "EndOffset": 1756,
+    "Score": 0.6603351831436157,
+    "Text": "pulse is a bit rapid",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SIGN",
+        "Score": 0.6768204569816589
+      }
+    ]
+  },
+  {
+    "Id": 54,
+    "BeginOffset": 1771,
+    "EndOffset": 1781,
+    "Score": 0.6603351831436157,
+    "Text": "dehydrated",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SIGN",
+        "Score": 0.6768204569816589
+      }
+    ]
+  },
+  {
+    "Id": 57,
+    "BeginOffset": 1801,
+    "EndOffset": 1830,
+    "Score": 0.5971075296401978,
+    "Text": "tenderness around the muscles",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SIGN",
+        "Score": 0.5752319693565369
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.8617406487464905,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "QUALITY",
+        "Id": 55,
+        "BeginOffset": 1791,
+        "EndOffset": 1795,
+        "Text": "some",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      },
+      {
+        "Type": "QUALITY",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.6795811653137207,
+        "RelationshipType": "QUALITY",
+        "Id": 56,
+        "BeginOffset": 1796,
+        "EndOffset": 1800,
+        "Text": "mild",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      },
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 58,
+        "BeginOffset": 1812,
+        "EndOffset": 1830,
+        "Text": "around the muscles",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 58,
+    "BeginOffset": 1812,
+    "EndOffset": 1830,
+    "Score": 0.5971075296401978,
+    "Text": "around the muscles",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 61,
+    "BeginOffset": 1823,
+    "EndOffset": 1830,
+    "Score": 0.5971075296401978,
+    "Text": "muscles",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 59,
+    "BeginOffset": 1856,
+    "EndOffset": 1867,
+    "Score": 0.6603351831436157,
+    "Text": "blood tests",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 60,
+    "BeginOffset": 1881,
+    "EndOffset": 1901,
+    "Score": 0.7613970637321472,
+    "Text": "supportive medicines",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 62,
+    "BeginOffset": 1908,
+    "EndOffset": 1916,
+    "Score": 0.9584784507751465,
+    "Text": "symptoms",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 63,
+    "BeginOffset": 1940,
+    "EndOffset": 1945,
+    "Score": 0.9584784507751465,
+    "Text": "fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8530592322349548
+      }
+    ]
+  },
+  {
+    "Id": 65,
+    "BeginOffset": 1954,
+    "EndOffset": 1958,
+    "Score": 0.8435389995574951,
+    "Text": "body",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 66,
+    "BeginOffset": 1963,
+    "EndOffset": 1968,
+    "Score": 0.7950295805931091,
+    "Text": "joint",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 67,
+    "BeginOffset": 1969,
+    "EndOffset": 1973,
+    "Score": 0.9584784507751465,
+    "Text": "pain",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8787732124328613
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7552722692489624,
+        "RelationshipType": "QUALITY",
+        "Id": 64,
+        "BeginOffset": 1947,
+        "EndOffset": 1953,
+        "Text": "severe",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      },
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.8435389995574951,
+        "RelationshipScore": 0.8534350991249084,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 65,
+        "BeginOffset": 1954,
+        "EndOffset": 1958,
+        "Text": "body",
+        "Category": "ANATOMY",
+        "Traits": []
+      },
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.7950295805931091,
+        "RelationshipScore": 0.8031880259513855,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 66,
+        "BeginOffset": 1963,
+        "EndOffset": 1968,
+        "Text": "joint",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 68,
+    "BeginOffset": 1975,
+    "EndOffset": 1983,
+    "Score": 0.9584784507751465,
+    "Text": "headache",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8530592322349548
+      }
+    ]
+  },
+  {
+    "Id": 69,
+    "BeginOffset": 1989,
+    "EndOffset": 2009,
+    "Score": 0.6603351831436157,
+    "Text": "pain behind the eyes",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6248409748077393
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "DIRECTION",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "DIRECTION",
+        "Id": 70,
+        "BeginOffset": 1994,
+        "EndOffset": 2000,
+        "Text": "behind",
+        "Category": "ANATOMY",
+        "Traits": []
+      },
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.7950295805931091,
+        "RelationshipScore": 0.7814922332763672,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 71,
+        "BeginOffset": 1994,
+        "EndOffset": 2009,
+        "Text": "behind the eyes",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 71,
+    "BeginOffset": 1994,
+    "EndOffset": 2009,
+    "Score": 0.7950295805931091,
+    "Text": "behind the eyes",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 72,
+    "BeginOffset": 2011,
+    "EndOffset": 2017,
+    "Score": 0.9584784507751465,
+    "Text": "nausea",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.8787732124328613
+      }
+    ]
+  },
+  {
+    "Id": 73,
+    "BeginOffset": 2047,
+    "EndOffset": 2059,
+    "Score": 0.821601390838623,
+    "Text": "dengue fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 74,
+    "BeginOffset": 2132,
+    "EndOffset": 2137,
+    "Score": 0.5971075296401978,
+    "Text": "blood",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 75,
+    "BeginOffset": 2199,
+    "EndOffset": 2205,
+    "Score": 0.5971075296401978,
+    "Text": "Dengue",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.6248409748077393
+      },
+      {
+        "Name": "DIAGNOSIS",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 77,
+    "BeginOffset": 2220,
+    "EndOffset": 2241,
+    "Score": 0.6603351831436157,
+    "Text": "lower platelet counts",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.6768204569816589
+      },
+      {
+        "Name": "SIGN",
+        "Score": 0.5296252369880676
+      }
+    ]
+  },
+  {
+    "Id": 78,
+    "BeginOffset": 2226,
+    "EndOffset": 2241,
+    "Score": 0.6603351831436157,
+    "Text": "platelet counts",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.6768204569816589
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "TEST_VALUE",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "TEST_VALUE",
+        "Id": 76,
+        "BeginOffset": 2220,
+        "EndOffset": 2225,
+        "Text": "lower",
+        "Category": "TEST_TREATMENT_PROCEDURE",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 79,
+    "BeginOffset": 2293,
+    "EndOffset": 2299,
+    "Score": 0.7172441482543945,
+    "Text": "Dengue",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.7299559712409973
+      },
+      {
+        "Name": "DIAGNOSIS",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 80,
+    "BeginOffset": 2349,
+    "EndOffset": 2360,
+    "Score": 0.8435389995574951,
+    "Text": "viral fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.8787732124328613
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5752319693565369
+      }
+    ]
+  },
+  {
+    "Id": 81,
+    "BeginOffset": 2370,
+    "EndOffset": 2377,
+    "Score": 0.5971075296401978,
+    "Text": "malaria",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "LOW_CONFIDENCE",
+        "Score": 0.5296252369880676
+      },
+      {
+        "Name": "DIAGNOSIS",
+        "Score": 0.5296252369880676
+      }
+    ]
+  },
+  {
+    "Id": 82,
+    "BeginOffset": 2482,
+    "EndOffset": 2488,
+    "Score": 0.6603351831436157,
+    "Text": "dengue",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.6768204569816589
+      },
+      {
+        "Name": "DIAGNOSIS",
+        "Score": 0.5752319693565369
+      }
+    ]
+  },
+  {
+    "Id": 83,
+    "BeginOffset": 2509,
+    "EndOffset": 2520,
+    "Score": 0.5330596566200256,
+    "Text": "proper rest",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 84,
+    "BeginOffset": 2522,
+    "EndOffset": 2531,
+    "Score": 0.821601390838623,
+    "Text": "hydration",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 85,
+    "BeginOffset": 2585,
+    "EndOffset": 2602,
+    "Score": 0.5330596566200256,
+    "Text": "increase bleeding",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.5296252369880676
+      },
+      {
+        "Name": "SIGN",
+        "Score": 0.47435709834098816
+      }
+    ]
+  },
+  {
+    "Id": 87,
+    "BeginOffset": 2594,
+    "EndOffset": 2602,
+    "Score": 0.5971075296401978,
+    "Text": "bleeding",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.5752319693565369
+      },
+      {
+        "Name": "SIGN",
+        "Score": 0.5752319693565369
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "QUALITY",
+        "Id": 86,
+        "BeginOffset": 2585,
+        "EndOffset": 2593,
+        "Text": "increase",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 88,
+    "BeginOffset": 2627,
+    "EndOffset": 2636,
+    "Score": 0.7172441482543945,
+    "Text": "medicines",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 89,
+    "BeginOffset": 2693,
+    "EndOffset": 2713,
+    "Score": 0.7172441482543945,
+    "Text": "Complete Blood Count",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 90,
+    "BeginOffset": 2715,
+    "EndOffset": 2718,
+    "Score": 0.7950295805931091,
+    "Text": "CBC",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 91,
+    "BeginOffset": 2725,
+    "EndOffset": 2739,
+    "Score": 0.8921527862548828,
+    "Text": "Platelet Count",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 92,
+    "BeginOffset": 2742,
+    "EndOffset": 2752,
+    "Score": 0.90631103515625,
+    "Text": "Hematocrit",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 93,
+    "BeginOffset": 2758,
+    "EndOffset": 2776,
+    "Score": 0.7172441482543945,
+    "Text": "Dengue NS1 Antigen",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 94,
+    "BeginOffset": 2782,
+    "EndOffset": 2809,
+    "Score": 0.7613970637321472,
+    "Text": "Dengue IgM & IgG Antibodies",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 95,
+    "BeginOffset": 2815,
+    "EndOffset": 2820,
+    "Score": 0.7613970637321472,
+    "Text": "Liver",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 96,
+    "BeginOffset": 2815,
+    "EndOffset": 2835,
+    "Score": 0.8617406487464905,
+    "Text": "Liver Function Tests",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 97,
+    "BeginOffset": 2837,
+    "EndOffset": 2840,
+    "Score": 0.7613970637321472,
+    "Text": "LFT",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 98,
+    "BeginOffset": 2847,
+    "EndOffset": 2865,
+    "Score": 0.7950295805931091,
+    "Text": "Random Blood Sugar",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 99,
+    "BeginOffset": 2972,
+    "EndOffset": 2992,
+    "Score": 0.5971075296401978,
+    "Text": "Supportive Treatment",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 168,
+    "BeginOffset": 3016,
+    "EndOffset": 3020,
+    "Score": 0.9902662634849548,
+    "Text": "Gaia",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "NAME",
+    "Traits": []
+  },
+  {
+    "Id": 169,
+    "BeginOffset": 3036,
+    "EndOffset": 3038,
+    "Score": 0.949001133441925,
+    "Text": "29",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "AGE",
+    "Traits": []
+  },
+  {
+    "Id": 100,
+    "BeginOffset": 3047,
+    "EndOffset": 3053,
+    "Score": 0.821601390838623,
+    "Text": "Female",
+    "Category": "BEHAVIORAL_ENVIRONMENTAL_SOCIAL",
+    "Type": "GENDER",
+    "Traits": []
+  },
+  {
+    "Id": 102,
+    "BeginOffset": 3094,
+    "EndOffset": 3105,
+    "Score": 0.5971075296401978,
+    "Text": "Paracetamol",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "FORM",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "FORM",
+        "Id": 101,
+        "BeginOffset": 3089,
+        "EndOffset": 3092,
+        "Text": "Tab",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "STRENGTH",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7814922332763672,
+        "RelationshipType": "STRENGTH",
+        "Id": 103,
+        "BeginOffset": 3106,
+        "EndOffset": 3112,
+        "Text": "650 mg",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DOSAGE",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7552722692489624,
+        "RelationshipType": "DOSAGE",
+        "Id": 104,
+        "BeginOffset": 3122,
+        "EndOffset": 3130,
+        "Text": "1 tablet",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "FREQUENCY",
+        "Score": 0.7950295805931091,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "FREQUENCY",
+        "Id": 105,
+        "BeginOffset": 3131,
+        "EndOffset": 3144,
+        "Text": "every 6 hours",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DOSAGE",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "DOSAGE",
+        "Id": 109,
+        "BeginOffset": 3193,
+        "EndOffset": 3202,
+        "Text": "4 tablets",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "FREQUENCY",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "FREQUENCY",
+        "Id": 110,
+        "BeginOffset": 3206,
+        "EndOffset": 3214,
+        "Text": "24 hours",
+        "Category": "MEDICATION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 106,
+    "BeginOffset": 3148,
+    "EndOffset": 3153,
+    "Score": 0.9584784507751465,
+    "Text": "fever",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9817302823066711
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.779019296169281
+      }
+    ]
+  },
+  {
+    "Id": 107,
+    "BeginOffset": 3157,
+    "EndOffset": 3161,
+    "Score": 0.6603351831436157,
+    "Text": "body",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 108,
+    "BeginOffset": 3157,
+    "EndOffset": 3166,
+    "Score": 0.9350614547729492,
+    "Text": "body pain",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.7299559712409973
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9013108015060425
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.6603351831436157,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 107,
+        "BeginOffset": 3157,
+        "EndOffset": 3161,
+        "Text": "body",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 112,
+    "BeginOffset": 3223,
+    "EndOffset": 3226,
+    "Score": 0.5330596566200256,
+    "Text": "ORS",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 114,
+    "BeginOffset": 3233,
+    "EndOffset": 3253,
+    "Score": 0.7613970637321472,
+    "Text": "Rehydration Solution",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 117,
+    "BeginOffset": 3365,
+    "EndOffset": 3371,
+    "Score": 0.6603351831436157,
+    "Text": "fluids",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "FREQUENCY",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "FREQUENCY",
+        "Id": 118,
+        "BeginOffset": 3372,
+        "EndOffset": 3377,
+        "Text": "daily",
+        "Category": "MEDICATION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 120,
+    "BeginOffset": 3390,
+    "EndOffset": 3401,
+    "Score": 0.6603351831436157,
+    "Text": "Ondansetron",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "FORM",
+        "Score": 0.5971075296401978,
+        "RelationshipScore": 0.5692254304885864,
+        "RelationshipType": "FORM",
+        "Id": 119,
+        "BeginOffset": 3385,
+        "EndOffset": 3388,
+        "Text": "Syp",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "STRENGTH",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "STRENGTH",
+        "Id": 121,
+        "BeginOffset": 3402,
+        "EndOffset": 3413,
+        "Text": "4 mg / 5 ml",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DOSAGE",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "DOSAGE",
+        "Id": 122,
+        "BeginOffset": 3409,
+        "EndOffset": 3413,
+        "Text": "5 ml",
+        "Category": "MEDICATION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 124,
+    "BeginOffset": 3425,
+    "EndOffset": 3436,
+    "Score": 0.7172441482543945,
+    "Text": "Ondansetron",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "FORM",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "FORM",
+        "Id": 123,
+        "BeginOffset": 3420,
+        "EndOffset": 3423,
+        "Text": "Tab",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "STRENGTH",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "STRENGTH",
+        "Id": 125,
+        "BeginOffset": 3437,
+        "EndOffset": 3441,
+        "Text": "4 mg",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DOSAGE",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "DOSAGE",
+        "Id": 126,
+        "BeginOffset": 3450,
+        "EndOffset": 3454,
+        "Text": "5 ml",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DOSAGE",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "DOSAGE",
+        "Id": 127,
+        "BeginOffset": 3459,
+        "EndOffset": 3467,
+        "Text": "1 tablet",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "FREQUENCY",
+        "Score": 0.7950295805931091,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "FREQUENCY",
+        "Id": 128,
+        "BeginOffset": 3469,
+        "EndOffset": 3480,
+        "Text": "twice a day",
+        "Category": "MEDICATION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 129,
+    "BeginOffset": 3484,
+    "EndOffset": 3499,
+    "Score": 0.9201511740684509,
+    "Text": "nausea/vomiting",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9405226111412048
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.779019296169281
+      }
+    ]
+  },
+  {
+    "Id": 131,
+    "BeginOffset": 3524,
+    "EndOffset": 3536,
+    "Score": 0.7950295805931091,
+    "Text": "Pantoprazole",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "FORM",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "FORM",
+        "Id": 130,
+        "BeginOffset": 3519,
+        "EndOffset": 3522,
+        "Text": "Tab",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "STRENGTH",
+        "Score": 0.821601390838623,
+        "RelationshipScore": 0.8386837244033813,
+        "RelationshipType": "STRENGTH",
+        "Id": 132,
+        "BeginOffset": 3537,
+        "EndOffset": 3542,
+        "Text": "40 mg",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DOSAGE",
+        "Score": 0.821601390838623,
+        "RelationshipScore": 0.8219892978668213,
+        "RelationshipType": "DOSAGE",
+        "Id": 133,
+        "BeginOffset": 3552,
+        "EndOffset": 3560,
+        "Text": "1 tablet",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "FREQUENCY",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "FREQUENCY",
+        "Id": 134,
+        "BeginOffset": 3561,
+        "EndOffset": 3588,
+        "Text": "once daily before breakfast",
+        "Category": "MEDICATION",
+        "Traits": []
+      },
+      {
+        "Type": "DURATION",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7552722692489624,
+        "RelationshipType": "DURATION",
+        "Id": 135,
+        "BeginOffset": 3594,
+        "EndOffset": 3600,
+        "Text": "5 days",
+        "Category": "MEDICATION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 136,
+    "BeginOffset": 3628,
+    "EndOffset": 3636,
+    "Score": 0.5971075296401978,
+    "Text": "bed rest",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 137,
+    "BeginOffset": 3641,
+    "EndOffset": 3662,
+    "Score": 0.5971075296401978,
+    "Text": "Plenty of oral fluids",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 138,
+    "BeginOffset": 3708,
+    "EndOffset": 3724,
+    "Score": 0.5971075296401978,
+    "Text": "Soft, light diet",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 140,
+    "BeginOffset": 3758,
+    "EndOffset": 3765,
+    "Score": 0.6603351831436157,
+    "Text": "Aspirin",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.6248409748077393
+      }
+    ]
+  },
+  {
+    "Id": 141,
+    "BeginOffset": 3767,
+    "EndOffset": 3776,
+    "Score": 0.8435389995574951,
+    "Text": "Ibuprofen",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.8787732124328613
+      }
+    ]
+  },
+  {
+    "Id": 142,
+    "BeginOffset": 3778,
+    "EndOffset": 3788,
+    "Score": 0.8435389995574951,
+    "Text": "Diclofenac",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.8787732124328613
+      }
+    ]
+  },
+  {
+    "Id": 143,
+    "BeginOffset": 3802,
+    "EndOffset": 3812,
+    "Score": 0.5971075296401978,
+    "Text": "painkiller",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": [
+      {
+        "Name": "NEGATION",
+        "Score": 0.6248409748077393
+      }
+    ]
+  },
+  {
+    "Id": 144,
+    "BeginOffset": 3825,
+    "EndOffset": 3836,
+    "Score": 0.7172441482543945,
+    "Text": "temperature",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 145,
+    "BeginOffset": 3841,
+    "EndOffset": 3846,
+    "Score": 0.8435389995574951,
+    "Text": "urine",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 146,
+    "BeginOffset": 3841,
+    "EndOffset": 3853,
+    "Score": 0.8617406487464905,
+    "Text": "urine output",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 147,
+    "BeginOffset": 3881,
+    "EndOffset": 3889,
+    "Score": 0.9584784507751465,
+    "Text": "bleeding",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9817302823066711
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.6768204569816589
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.5330596566200256,
+        "RelationshipScore": 0.5068173408508301,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 148,
+        "BeginOffset": 3895,
+        "EndOffset": 3903,
+        "Text": "any site",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 148,
+    "BeginOffset": 3895,
+    "EndOffset": 3903,
+    "Score": 0.5330596566200256,
+    "Text": "any site",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 150,
+    "BeginOffset": 3912,
+    "EndOffset": 3921,
+    "Score": 0.877546489238739,
+    "Text": "abdominal",
+    "Category": "ANATOMY",
+    "Type": "SYSTEM_ORGAN_SITE",
+    "Traits": []
+  },
+  {
+    "Id": 151,
+    "BeginOffset": 3912,
+    "EndOffset": 3926,
+    "Score": 0.9584784507751465,
+    "Text": "abdominal pain",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9817302823066711
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9596198797225952
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.7552722692489624,
+        "RelationshipType": "QUALITY",
+        "Id": 149,
+        "BeginOffset": 3905,
+        "EndOffset": 3911,
+        "Text": "severe",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      },
+      {
+        "Type": "SYSTEM_ORGAN_SITE",
+        "Score": 0.877546489238739,
+        "RelationshipScore": 0.8813977241516113,
+        "RelationshipType": "SYSTEM_ORGAN_SITE",
+        "Id": 150,
+        "BeginOffset": 3912,
+        "EndOffset": 3921,
+        "Text": "abdominal",
+        "Category": "ANATOMY",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 153,
+    "BeginOffset": 3939,
+    "EndOffset": 3947,
+    "Score": 0.9584784507751465,
+    "Text": "vomiting",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.8787732124328613
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9405226111412048
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "QUALITY",
+        "Id": 152,
+        "BeginOffset": 3928,
+        "EndOffset": 3938,
+        "Text": "persistent",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 155,
+    "BeginOffset": 3957,
+    "EndOffset": 3965,
+    "Score": 0.9584784507751465,
+    "Text": "weakness",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.8787732124328613
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.9214484095573425
+      }
+    ],
+    "Attributes": [
+      {
+        "Type": "QUALITY",
+        "Score": 0.7172441482543945,
+        "RelationshipScore": 0.7223333120346069,
+        "RelationshipType": "QUALITY",
+        "Id": 154,
+        "BeginOffset": 3949,
+        "EndOffset": 3956,
+        "Text": "extreme",
+        "Category": "MEDICAL_CONDITION",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 156,
+    "BeginOffset": 3970,
+    "EndOffset": 3990,
+    "Score": 0.877546489238739,
+    "Text": "reduced urine output",
+    "Category": "MEDICAL_CONDITION",
+    "Type": "DX_NAME",
+    "Traits": [
+      {
+        "Name": "HYPOTHETICAL",
+        "Score": 0.9214484095573425
+      },
+      {
+        "Name": "SYMPTOM",
+        "Score": 0.5296252369880676
+      }
+    ]
+  },
+  {
+    "Id": 157,
+    "BeginOffset": 4020,
+    "EndOffset": 4029,
+    "Score": 0.6603351831436157,
+    "Text": "medicines",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 158,
+    "BeginOffset": 4034,
+    "EndOffset": 4040,
+    "Score": 0.7172441482543945,
+    "Text": "fluids",
+    "Category": "MEDICATION",
+    "Type": "GENERIC_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 159,
+    "BeginOffset": 4061,
+    "EndOffset": 4066,
+    "Score": 0.6603351831436157,
+    "Text": "blood",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 160,
+    "BeginOffset": 4061,
+    "EndOffset": 4072,
+    "Score": 0.7613970637321472,
+    "Text": "blood tests",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TEST_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 161,
+    "BeginOffset": 4078,
+    "EndOffset": 4083,
+    "Score": 0.6603351831436157,
+    "Text": "today",
+    "Category": "TIME_EXPRESSION",
+    "Type": "TIME_TO_TEST_NAME",
+    "Traits": [],
+    "Attributes": [
+      {
+        "Type": "TEST_NAME",
+        "Score": 0.7613970637321472,
+        "RelationshipScore": 0.6270833611488342,
+        "RelationshipType": "OVERLAP",
+        "Id": 160,
+        "BeginOffset": 4061,
+        "EndOffset": 4072,
+        "Text": "blood tests",
+        "Category": "TEST_TREATMENT_PROCEDURE",
+        "Traits": []
+      }
+    ]
+  },
+  {
+    "Id": 170,
+    "BeginOffset": 4240,
+    "EndOffset": 4244,
+    "Score": 0.14997950196266174,
+    "Text": "Gaia",
+    "Category": "PROTECTED_HEALTH_INFORMATION",
+    "Type": "NAME",
+    "Traits": []
+  },
+  {
+    "Id": 162,
+    "BeginOffset": 4246,
+    "EndOffset": 4255,
+    "Score": 0.7172441482543945,
+    "Text": "Rest well",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  },
+  {
+    "Id": 163,
+    "BeginOffset": 4260,
+    "EndOffset": 4273,
+    "Score": 0.821601390838623,
+    "Text": "stay hydrated",
+    "Category": "TEST_TREATMENT_PROCEDURE",
+    "Type": "TREATMENT_NAME",
+    "Traits": []
+  }
+]
