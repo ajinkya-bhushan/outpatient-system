@@ -1,4 +1,4 @@
-"""Speech-to-text adapter around the sst_v1 FastAPI service."""
+"""Speech-to-text adapter: in-process local engine or remote HTTP proxy."""
 
 from app.modules.stt.service import STTService, get_stt_service
 

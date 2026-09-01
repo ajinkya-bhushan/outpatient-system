@@ -4,7 +4,7 @@
 **Classification:** Production-intent clinical documentation feature  
 **Document type:** Complete feature specification (Parts A–G)
 
-Related API contracts: `backend/docs/STT_DIARIZATION_API.md` (capture), `soap_create/API.md` (SOAP create). Recording-screen wiring: Appendix D. SOAP create wiring: Appendix E.
+Related API contracts: `backend/docs/STT_DIARIZATION_API.md` (capture), `docs/SOAP_CREATE_API.md` (SOAP create). Recording-screen wiring: Appendix D. SOAP create wiring: Appendix E.
 
 ---
 
@@ -40,18 +40,18 @@ Related capability IDs:
 
 Current codebase state:
 
-- Frontend (`frontend/`, `praj_ui/`) is a clickable DocConnect prototype. Login is wired to the backend auth API. The **Live Encounter** screen (`/?screen=recording`) is wired to in-process diarization: upload a file or record from the microphone, then render speaker-labelled bubbles with per-turn playback and inline edit. **Generate Note** starts `POST /api/v1/soap/create`; the generation screen polls the job; review renders the returned S/O/A/P sections. Schedule patients still use mock clinical data.
-- Speech-to-text now runs **in the unified backend** (`STT_ENGINE_MODE=local`): SpeechBrain diarization + Faster-Whisper transcription, with local job storage under `backend/data/audio/`. The standalone evaluation service (`sst_v1/`) remains as a fallback (`STT_ENGINE_MODE=remote`) and as the source of the two-party test fixture.
-- SOAP generation (`soap_create/` prototype scripts, live in `backend/app/modules/medical_comprehend` + `generate_soap`): Amazon Comprehend Medical → Aava agent 54818 → parsed S/O/A/P persisted to Postgres. UI path is the pollable `POST /api/v1/soap/create` job.
+- Frontend (`frontend/`) is a clickable DocConnect prototype. Login is wired to the backend auth API. The **Live Encounter** screen (`/?screen=recording`) is wired to in-process diarization: upload a file or record from the microphone, then render speaker-labelled bubbles with per-turn playback and inline edit. **Generate Note** starts `POST /api/v1/soap/create`; the generation screen polls the job; review renders the returned S/O/A/P sections. Schedule patients still use mock clinical data.
+- Speech-to-text runs **in the unified backend** (`STT_ENGINE_MODE=local`): SpeechBrain diarization + Faster-Whisper transcription, with local job storage under `backend/data/audio/`. `STT_ENGINE_MODE=remote` can still proxy to an external STT HTTP service at `STT_BASE_URL`.
+- SOAP generation lives in `backend/app/modules/medical_comprehend` + `generate_soap`: Amazon Comprehend Medical → Aava agent 54818 → parsed S/O/A/P persisted to Postgres. UI path is the pollable `POST /api/v1/soap/create` job.
 - Unified FastAPI backend (`backend/`) exposes `/api/v1/auth`, `/api/v1/stt/*` (transcribe, diarize, jobs, audio), comprehend, SOAP, and pipeline.
 
 ## 3.5 Owner
 
 Outpatient System engineering team. Prototype owners visible in the repo:
 
-- Product UI: DocConnect React screens
-- STT / diarization: `backend/app/modules/stt` (in-process); evaluation harness in `sst_v1`
-- SOAP pipeline: `soap_create` (Aman Prakash / Nitor Infotech)
+- Product UI: DocConnect React screens (`frontend/`)
+- STT / diarization: `backend/app/modules/stt` (in-process)
+- SOAP pipeline: `backend/app/modules/medical_comprehend` + `generate_soap`
 
 ## 3.6 Last Updated
 
@@ -306,11 +306,11 @@ On approve, the prototype shows an EHR sync success screen. In the target backen
 - Patient consent for ambient recording is obtained outside this feature.
 - `STT_ENGINE_MODE=local` and the optional `stt` extra (torch, speechbrain, faster-whisper) are installed on the runtime that serves `/api/v1/stt/diarize`.
 - ffmpeg / ffprobe are on PATH (the backend Dockerfile installs them).
-- `sst_v1` is only required when `STT_ENGINE_MODE=remote`. Live WebSocket transcription is remote-mode only.
+- An external STT service is only required when `STT_ENGINE_MODE=remote`. Live WebSocket transcription is remote-mode only.
 - Outpatient encounters are two-party unless the caller overrides `num_speakers`. Automatic speaker-count estimation is less reliable than supplying the count.
 - AWS credentials can call Comprehend Medical in the configured region.
 - `AAVA_JWT_TOKEN` can execute agent `54818`.
-- Python 3.11 is required for `sst_v1` Whisper dependencies; the unified backend also targets 3.11+.
+- The unified backend targets Python 3.11+.
 - After login, the frontend still uses mock patients (`Marcus Thorne` / `Marcus Johnson`) for schedule and encounter screens. Recording now calls the backend; those other screens do not.
 
 ---
@@ -323,7 +323,7 @@ On approve, the prototype shows an EHR sync success screen. In the target backen
 |---|---|
 | DocConnect React UI | Capture, generation, review screens |
 | `backend/app/modules/stt` | In-process SpeechBrain diarization + Faster-Whisper STT (default) |
-| `sst_v1` FastAPI | Legacy / evaluation STT; used only when `STT_ENGINE_MODE=remote` |
+| External STT HTTP service | Optional; used only when `STT_ENGINE_MODE=remote` |
 | ffmpeg / ffprobe | Convert uploads to 16 kHz mono WAV; duration probe |
 | SpeechBrain | VAD (CRDNN) + ECAPA-TDNN embeddings + spectral clustering |
 | Faster-Whisper / openai-whisper | Word-level transcription |
@@ -419,11 +419,11 @@ On approve, the prototype shows an EHR sync success screen. In the target backen
 | Area | Owner |
 |---|---|
 | Product | Product Manager |
-| UX | DocConnect UI (`frontend/`, `praj_ui/`) |
+| UX | DocConnect UI (`frontend/`) |
 | Backend | `backend/` FastAPI |
-| STT / diarization | `backend/app/modules/stt` (in-process); `sst_v1/` evaluation |
-| SOAP / AI | `soap_create/` + `backend/app/modules/generate_soap` |
-| QA | pytest suites in `backend/tests` (including `test_stt_diarization.py` and `test_stt_real_model.py`) and `sst_v1/tests` |
+| STT / diarization | `backend/app/modules/stt` (in-process) |
+| SOAP / AI | `backend/app/modules/medical_comprehend` + `generate_soap` |
+| QA | pytest suites in `backend/tests` (including `test_stt_diarization.py` and `test_stt_real_model.py`) |
 | Security | Security / compliance review before PHI production use |
 | EHR | Future Epic/FHIR owner |
 
@@ -435,8 +435,8 @@ On approve, the prototype shows an EHR sync success screen. In the target backen
 
 | Milestone | Target | Status |
 |---|---|---|
-| STT evaluation service | Existing | Done (`sst_v1`, 76 tests) |
-| SOAP script (Comprehend + Aava) | Existing | Done (`soap_create`) |
+| STT evaluation service | Existing | Done (in-process local engine; remote proxy optional) |
+| SOAP script (Comprehend + Aava) | Existing | Done (`backend/app/modules/medical_comprehend` + `generate_soap`) |
 | Clickable UI prototype | Existing | Done (`frontend`) |
 | Unified backend modules | Week of 21 Aug 2026 | Done |
 | Provider ID login + JWT (`/api/v1/auth`) | 21 Aug 2026 | Done (`frontend` login → `users` table) |
@@ -616,7 +616,7 @@ Shared chrome: collapsible sidebar (`AppSidebar`), top bar, mobile bottom nav. F
 **Route:** `/?screen=generation` — `frontend/src/screens/GenerationScreen.jsx`.  
 **Client:** `frontend/src/api/soap.js` — `createSoap`, `getSoapJob`.  
 **Components:** AI ring, patient name, three `Step` items bound to job `steps[]`, Review Draft / Cancel / Retry.  
-**States:** `queued` → `extracting` → `generating` → `done` | `failed`. Transcribing is already `done` on arrival (STT finished on the recording screen). **Review Draft Note** is enabled only on `done`. Cancel stops polling; the backend job may still finish. Contract: [`soap_create/API.md`](../soap_create/API.md).
+**States:** `queued` → `extracting` → `generating` → `done` | `failed`. Transcribing is already `done` on arrival (STT finished on the recording screen). **Review Draft Note** is enabled only on `done`. Cancel stops polling; the backend job may still finish. Contract: [`SOAP_CREATE_API.md`](SOAP_CREATE_API.md).
 
 ## 21.F SOAP Review
 
@@ -752,8 +752,8 @@ None. Recording uses a visual red dot and timer only. Do not play a shutter/beep
 
 - Fonts: Inter, Courier Prime.
 - No PDF/email templates in v1.
-- Sample SOAP: `soap_create/soap_note.md`.
-- Sample entities: `soap_create/entities.json`.
+- Sample SOAP: `docs/fixtures/soap_note.md`.
+- Sample entities: `docs/fixtures/entities.json`.
 
 ---
 
@@ -826,7 +826,7 @@ SOAP markdown for review; later FHIR resources; analytics events.
 ## 26.6 External Systems
 
 - In-process STT (`backend/app/modules/stt`, default)
-- `sst_v1` (internal, `STT_ENGINE_MODE=remote` only)
+- Optional remote STT HTTP service (`STT_ENGINE_MODE=remote` only)
 - Amazon Comprehend Medical
 - Aava `int-ai.aava.ai`
 - Epic FHIR (planned)
@@ -1006,7 +1006,7 @@ Out of scope this slice: register, password reset, refresh tokens, SSO, lockout,
 ### 28.2 Health
 
 - `GET /api/v1/health` → `{ "status": "ok", "version": "0.1.0" }`
-- `GET /api/v1/ready` → local engine status (`stt_engine`: device, model, `models_loaded`, `dependencies_available`) plus AWS/Aava configured flags. Does not require `sst_v1` when mode is `local`.
+- `GET /api/v1/ready` → local engine status (`stt_engine`: device, model, `models_loaded`, `dependencies_available`) plus AWS/Aava configured flags. Does not require a remote STT service when mode is `local`.
 
 ### 28.3 Diarize (primary capture path)
 
@@ -1074,7 +1074,7 @@ Supply `num_speakers` when known. Automatic estimation is the least reliable sta
 
 ### 28.10 Generate SOAP
 
-Transcript-first job API (UI path). Full field reference: [`soap_create/API.md`](../soap_create/API.md).
+Transcript-first job API (UI path). Full field reference: [`SOAP_CREATE_API.md`](SOAP_CREATE_API.md).
 
 - **POST** `/api/v1/soap/create`  
 - **Body:** `{ "transcript": "...", "encounter_id": "optional-uuid", "job_id": "optional-stt-job", "language": "en", "user_inputs": {} }`  
@@ -1099,9 +1099,9 @@ Entities-in replay (unchanged):
 
 Both return transcript + entities + SOAP.
 
-### 28.12 sst_v1 native contract (preserved)
+### 28.12 Remote STT contract (optional)
 
-See `sst_v1/README.md`. Additional probes: `GET /api/v1/health`, `GET /api/v1/ready`. Used only when `STT_ENGINE_MODE=remote`.
+Used only when `STT_ENGINE_MODE=remote`. The backend proxies transcribe/live to `STT_BASE_URL`. Additional probes: `GET /api/v1/health`, `GET /api/v1/ready`.
 
 ---
 
@@ -1140,8 +1140,8 @@ Ownership: clinician can only access encounters for their clinic/service. Tenant
 | `DATABASE_URL` | Postgres (users table) | from `database/.env` |
 | `AUTH_JWT_EXPIRE_SECONDS` | Login token TTL | `28800` (8 hours) |
 | `VITE_API_BASE_URL` | Frontend API origin | `same-origin` in the supervisor frontend (Vite proxies `/api` → `:10200`). Production `nginx.conf` has **no** `/api` proxy — a built image needs an absolute backend URL or a reverse proxy. Pre-existing gap. |
-| `STT_ENGINE_MODE` | `local` (in-process) or `remote` (sst_v1) | `local` |
-| `STT_BASE_URL` | sst_v1 origin (remote mode) | `http://127.0.0.1:8000` |
+| `STT_ENGINE_MODE` | `local` (in-process) or `remote` (external STT) | `local` |
+| `STT_BASE_URL` | Remote STT origin (remote mode) | `http://127.0.0.1:8000` |
 | `STT_TIMEOUT_SECONDS` | Remote upload timeout | `120` |
 | `STT_DEVICE` | `auto` / `cuda` / `cpu` | `auto` (CUDA if present, else CPU) |
 | `STT_MODEL_PRELOAD` | Load models at startup | `false` |
@@ -1173,7 +1173,7 @@ Ownership: clinician can only access encounters for their clinic/service. Tenant
 | `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | `.env` / secret manager | 503 on comprehend |
 | `AWS_SESSION_TOKEN` | Optional | Ignored |
 | `AAVA_JWT_TOKEN` | `.env` / secret manager | 503 on SOAP |
-| `OPENAI_API_KEY` | sst_v1 only | OpenAI engine unavailable |
+| `OPENAI_API_KEY` | Remote STT only | OpenAI engine unavailable |
 
 Never commit `.env`. Rotate AWS keys and Aava JWT on a defined interval. Do not put secret values in this document.
 
@@ -1193,7 +1193,7 @@ Postgres is in use for clinical tables via Alembic under `database/migrations/`.
 
 Apply with `cd database && uv run alembic upgrade head`.
 
-**Seeding:** Development login uses `DR-SMITH` / `Smith#2026` and `ADMIN` / `Admin#2026` (bcrypt at migration time). Do not use those passwords in production. The Gaia dengue conversation in `soap_create/` remains the SOAP fixture; production must never be seeded with that synthetic patient.
+**Seeding:** Development login uses `DR-SMITH` / `Smith#2026` and `ADMIN` / `Admin#2026` (bcrypt at migration time). Do not use those passwords in production. The Gaia dengue conversation in `docs/fixtures/` remains the SOAP fixture; production must never be seeded with that synthetic patient.
 
 ---
 
@@ -1274,7 +1274,7 @@ flowchart LR
 | `users` table | Credential store | New auth columns | SQL | Login fails |
 | Local STT engine | SpeechBrain + Whisper | New | in-process, GPU semaphore | `/diarize` 503 |
 | Job store | PHI WAV + result.json | New | local disk | No playback |
-| `sst_v1` | Legacy / eval STT | Existing | HTTP/WS if remote | Unused in local mode |
+| Remote STT proxy | Optional external STT | Existing | HTTP/WS if remote | Unused in local mode |
 | Comprehend Medical | Entity extraction | Existing script, now a module | AWS SDK | No SOAP grounding |
 | Aava agent | SOAP draft | Existing script, now a module | HTTPS multipart | No draft |
 | In-memory store | POC encounter cache | New | Process memory | Lost on restart |
@@ -1413,6 +1413,7 @@ outpatient-system/
     tests/test_stt_diarization.py
     tests/test_stt_real_model.py
     tests/test_soap_create.py
+    tests/fixtures/soap_note.md
     docs/STT_DIARIZATION_API.md
     data/audio/                      # gitignored PHI
     data/models/                     # gitignored weights
@@ -1432,16 +1433,14 @@ outpatient-system/
   docker-compose.yml                # frontend :10100 + backend :10200
   docs/
     FEATURE_SPEC.md
-  sst_v1/
-  soap_create/
-    API.md                          # SOAP create contract
-    app.py / agent_call.py          # prototype scripts
-  praj_ui/                          # UI copy; login not wired
+    SOAP_CREATE_API.md              # SOAP create contract
+    fixtures/soap_note.md
+    fixtures/entities.json
 ```
 
 ## 35.3 Modified Files
 
-Existing `sst_v1` and `soap_create` were not rewritten in place. Auth added `routes_auth.py`, `database` migration `011`, and wired `frontend/src/screens/LoginScreen.jsx`. STT/diarization added `backend/app/modules/stt/local/` and wired `RecordingScreen.jsx`. SOAP create added `soap_jobs.py` / `soap_store.py` / `parse.py`, `POST /api/v1/soap/create`, and wired `GenerationScreen.jsx` + `ReviewScreen.jsx`.
+Auth added `routes_auth.py`, `database` migration `011`, and wired `frontend/src/screens/LoginScreen.jsx`. STT/diarization added `backend/app/modules/stt/local/` and wired `RecordingScreen.jsx`. SOAP create added `soap_jobs.py` / `soap_store.py` / `parse.py`, `POST /api/v1/soap/create`, and wired `GenerationScreen.jsx` + `ReviewScreen.jsx`.
 
 ## 35.4 Naming Conventions
 
@@ -1578,7 +1577,7 @@ New dependencies should be reviewed for CVEs, maintenance, and PHI data-flow (bo
 **Can:** Return conditions, meds, tests, anatomy, time, PHI, traits (NEGATION, HYPOTHETICAL, SYMPTOM, DIAGNOSIS).  
 **Cannot:** Write SOAP or decide treatment.  
 **Input:** Transcript text (chunked at 20k chars).  
-**Output:** `Entities` array matching `soap_create/entities.json`.  
+**Output:** `Entities` array matching `docs/fixtures/entities.json`.  
 **Autonomy:** Automatic, no tools.  
 **Failure:** 502; SOAP is not started.
 
@@ -1588,7 +1587,7 @@ New dependencies should be reviewed for CVEs, maintenance, and PHI data-flow (bo
 **Can:** Analyze uploaded entity JSON and return markdown SOAP.  
 **Cannot:** Approve, prescribe, or call EHR.  
 **Input:** `entities.txt` plus `{{input1}}` inline JSON.  
-**Output:** SOAP markdown (`soap_create/soap_note.md` shape).  
+**Output:** SOAP markdown (`docs/fixtures/soap_note.md` shape).  
 **Autonomy:** Autonomous generation; human approval required before publication.  
 **Guardrails:** Prompt lives on Aava; backend only transports entities.  
 **Escalation:** Non-success status → HTTP 502, clinician retries.  
@@ -1642,7 +1641,7 @@ Markdown SOAP with:
 
 ## 41.4 Examples / Few-Shot Samples
 
-Gold sample: dengue/Gaia conversation → `soap_create/entities.json` → `soap_create/soap_note.md`.
+Gold sample: dengue/Gaia conversation → `docs/fixtures/entities.json` → `docs/fixtures/soap_note.md`.
 
 ## 41.5 Prompt Version
 
@@ -1827,7 +1826,6 @@ Backend on-call; AI/vendor on-call for Aava; cloud on-call for AWS.
 - Backend `GET /api/v1/health` liveness
 - Backend `GET /api/v1/ready` — local `stt_engine` + secret presence
 - `GET /api/v1/stt/engine` — dependencies without loading models
-- sst_v1 `/api/v1/health` and `/api/v1/ready`
 
 Frontend container healthchecks nginx on 10100.
 
@@ -1902,12 +1900,11 @@ Aava subscription, AWS account, future Epic app fees.
 ## 53.1 Unit Tests
 
 - Backend: empty transcript, SOAP without entities, pipeline happy path with mocks; auth login success/fail/role mismatch/`/me`; STT validation, storage glob-safety, job audio 200/206/404, missing-extra 503 (`backend/tests`, including `test_stt_diarization.py`).
-- sst_v1: audio validation, Whisper engine mocks, upload routes, websocket protocol (76 passed, 2 skipped).
 
 ## 53.2 Integration Tests
 
 - Backend → mocked STT/AWS/Aava.
-- Optional live local engine with real models (`pytest -m real_model`, fixture `sst_v1/data/diar_testset/two_party/two_party.wav`: 47 s, 2 speakers, 8 turns).
+- Optional live local engine with real models (`pytest -m real_model`, fixture `backend/tests/fixtures/diar_testset/two_party/two_party.wav`: 47 s, 2 speakers, 8 turns).
 
 ## 53.3 End-to-End Tests
 
@@ -1943,7 +1940,7 @@ RBAC on STT/SOAP (once implemented), path traversal / glob wildcard on `job_id`,
 
 ## 53.11 Performance Tests
 
-`sst_v1/scripts/benchmark.py` upload and live. Local: time `POST /diarize` on `two_party.wav`.
+Time `POST /diarize` on `two_party.wav`.
 
 ## 53.12 AI Behaviour Tests
 
@@ -1951,7 +1948,7 @@ SOAP contains four sections; does not approve itself; empty Aava output errors; 
 
 ## 53.13 Test Data
 
-`soap_create` sample conversation; `sst_v1/data/diar_testset/two_party/two_party.wav` (+ `.rttm`, `.ref.txt`); `sst_v1` `scripts/generate_test_audio.py`. No production PHI in fixtures.
+Gaia dengue conversation (`docs/fixtures/`); optional two-party WAV under `backend/tests/fixtures/diar_testset/two_party/`. No production PHI in fixtures.
 
 ---
 
@@ -1975,15 +1972,11 @@ cd backend && uv run --no-sync uvicorn app.main:app --reload --port 10200
 
 # Frontend (proxies /api → :10200 when VITE_API_BASE_URL=same-origin)
 cd frontend && npm run dev
-
-# Optional legacy engine
-cd sst_v1 && uv run uvicorn app.main:app --reload --port 8000
-# then STT_ENGINE_MODE=remote
 ```
 
 ## 54.2 CI Process
 
-Lint (`ruff`), `pytest` for backend (including `test_stt_diarization.py`) and sst_v1, frontend `npm run build`. Add secret scanning. Do not publish `.env` or `data/audio/`.
+Lint (`ruff`), `pytest` for backend (including `test_stt_diarization.py`), frontend `npm run build`. Add secret scanning. Do not publish `.env` or `data/audio/`.
 
 ## 54.3 Deployment Strategy
 
@@ -1991,14 +1984,14 @@ Feature flag for SOAP generation. Rolling backend deploy. Local model cache must
 
 ## 54.4 Infrastructure Changes
 
-Backend on **10200** (Docker host network). Frontend nginx / Vite **10100**. Postgres `users` (and other clinical tables) via `DATABASE_URL`. No queue yet; `/diarize` and Aava poll are synchronous. sst_v1 on 8000 only if remote mode is enabled.
+Backend on **10200** (Docker host network). Frontend nginx / Vite **10100**. Postgres `users` (and other clinical tables) via `DATABASE_URL`. No queue yet; `/diarize` and Aava poll are synchronous. Remote STT only if `STT_ENGINE_MODE=remote`.
 
 ## 54.5 Deployment Order
 
 1. backend with STT extra + ffmpeg + model cache  
 2. frontend pointing at backend (`same-origin` + `/api` proxy, or absolute URL)  
 3. Enable feature flag  
-4. sst_v1 only if `STT_ENGINE_MODE=remote`  
+4. External STT only if `STT_ENGINE_MODE=remote`  
 
 ## 54.6 Approvals
 
@@ -2056,7 +2049,7 @@ Fail a phase if acceptance <80% or critical miss ≥2%.
 
 **Detection:** `/api/v1/stt/engine` `dependencies_available` false, `/api/v1/ready` `stt` not `ok`, or `/diarize` 503/502.  
 **Checks:** `uv sync --extra stt` (or `/venv/main` on this image), ffmpeg/ffprobe, GPU/CPU memory, `MODEL_CACHE_DIR`, `STT_ENGINE_MODE`.  
-**Mitigation:** Switch UI to wait / retry; remote mode if sst_v1 is up.  
+**Mitigation:** Switch UI to wait / retry; remote mode if an external STT service is up.  
 **Escalation:** STT owner.
 
 ### Problem: SOAP generation unavailable
@@ -2091,7 +2084,6 @@ Synthetic pipeline in staging returns 200 and four SOAP sections.
 - [ ] RBAC implemented (login role check only; STT/SOAP ungated)
 - [ ] Security review complete
 - [x] Backend unit tests passing
-- [x] sst_v1 tests passing
 - [x] Login UI wired to backend
 - [x] Recording screen wired to `/api/v1/stt/diarize` (upload + mic)
 - [x] Per-turn audio playback (`GET /jobs/{id}/audio`)
@@ -2136,7 +2128,7 @@ Synthetic pipeline in staging returns 200 and four SOAP sections.
 | Term | Meaning |
 |---|---|
 | SOAP | Subjective, Objective, Assessment, Plan |
-| STT / SST | Speech-to-text (`sst_v1` in this repo) |
+| STT / SST | Speech-to-text (`backend/app/modules/stt`) |
 | Draft | Generated note not yet approved |
 | HITL | Human-in-the-loop |
 | Diarization | Splitting audio into speaker turns (SpeechBrain in this product) |
@@ -2233,18 +2225,18 @@ Synthetic pipeline in staging returns 200 and four SOAP sections.
 | Step | Current UI | Current scripts | Target backend |
 |---|---|---|---|
 | Login | Role + Provider ID + password; JWT; error pop | — | `POST /api/v1/auth/login` |
-| Record | Start/End Encounter + MediaRecorder File | `WS /api/v1/live` in sst_v1 | `POST /api/v1/stt/diarize` after stop |
-| Upload | Upload button on recording screen | `POST /api/v1/transcribe` | `POST /api/v1/stt/diarize` |
+| Record | Start/End Encounter + MediaRecorder File | — | `POST /api/v1/stt/diarize` after stop |
+| Upload | Upload button on recording screen | — | `POST /api/v1/stt/diarize` |
 | Transcript | Speaker bubbles from `/diarize` `turns[]` | Whisper JSON | Stored job + WAV |
 | Play turn | Shared `<audio>` + Range seek | — | `GET /api/v1/stt/jobs/{id}/audio` |
 | Edit turn | Local React state | — | Persist later |
-| Entities | Live on Generate Note (Comprehend) | `soap_create/app.py` | `modules/medical_comprehend/app.py` |
-| SOAP | Live draft from `/soap/create` | `soap_create/agent_call.py` | `modules/generate_soap` + `soap_jobs` |
+| Entities | Live on Generate Note (Comprehend) | — | `modules/medical_comprehend/app.py` |
+| SOAP | Live draft from `/soap/create` | — | `modules/generate_soap` + `soap_jobs` |
 | Review | Four SOAP cards + Plan editor | Markdown file | `soap_notes` / `soap_note_sections` |
 
 ---
 
-# Appendix B — Sample Grounding (soap_create)
+# Appendix B — Sample Grounding
 
 The checked-in dengue visit for patient Gaia produced Comprehend entities (conditions such as fever, headache, dengue; meds such as paracetamol, ondansetron, pantoprazole; tests such as CBC and Dengue NS1) and a SOAP note with suspected dengue, NSAID avoidance, and warning signs. That pair is the regression fixture for generate-SOAP.
 
@@ -2266,7 +2258,7 @@ curl -s http://127.0.0.1:10200/api/v1/auth/login \
 
 # 3) Diarize (same call the recording screen makes)
 curl -s http://127.0.0.1:10200/api/v1/stt/diarize \
-  -F "file=@sst_v1/data/diar_testset/two_party/two_party.wav" \
+  -F "file=@backend/tests/fixtures/diar_testset/two_party/two_party.wav" \
   -F "num_speakers=2"
 
 # 4) Play back a job (replace JOB_ID)
@@ -2291,7 +2283,7 @@ npm run dev
 # open /?screen=recording → Generate Note → generation → review
 ```
 
-Optional remote STT: run `sst_v1` on :8000 and set `STT_ENGINE_MODE=remote`. `/diarize` then returns 503.
+Optional remote STT: set `STT_ENGINE_MODE=remote` and `STT_BASE_URL`. `/diarize` then returns 503.
 
 ---
 
@@ -2355,7 +2347,7 @@ Full contract: `backend/docs/STT_DIARIZATION_API.md`.
 
 # Appendix E — SOAP create flow (v1.2)
 
-This slice (27 August 2026) wires **Generate Note** through Comprehend Medical and the Aava documentation agent, then shows the draft on review. Contract source of truth: [`soap_create/API.md`](../soap_create/API.md). Prototype scripts `soap_create/app.py` and `soap_create/agent_call.py` stay as the original offline path; they are not a second HTTP server.
+This slice (27 August 2026) wires **Generate Note** through Comprehend Medical and the Aava documentation agent, then shows the draft on review. Contract source of truth: [`SOAP_CREATE_API.md`](SOAP_CREATE_API.md).
 
 ## E.1 UX flow
 
@@ -2428,11 +2420,11 @@ Pydantic `Settings` loads `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` from `
 
 ## E.7 Still out of scope
 
-JWT gating of SOAP routes, ICD extraction from the draft, persisting bubble edits back to `result.json`, live-extraction tags on the recording rail, EHR sync, standing up `soap_create` as its own process.
+JWT gating of SOAP routes, ICD extraction from the draft, persisting bubble edits back to `result.json`, live-extraction tags on the recording rail, EHR sync.
 
 ## E.8 Verification performed
 
-- `pytest` `tests/test_soap_create.py`: parse gold `soap_create/soap_note.md` into four sections; create job with stubbed Comprehend + Aava reaches `done`; empty transcript 400; unknown encounter 404; failed extract marks the extracting step failed.
+- `pytest` `tests/test_soap_create.py`: parse gold `docs/fixtures/soap_note.md` into four sections; create job with stubbed Comprehend + Aava reaches `done`; empty transcript 400; unknown encounter 404; failed extract marks the extracting step failed.
 - `test_comprehend_client_passes_settings_credentials`: boto3 receives Settings keys.
 - Live `detect_entities` after the credentials fix returned `MEDICAL_CONDITION` entities.
 - `npm run build` frontend.

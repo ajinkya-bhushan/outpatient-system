@@ -6,10 +6,10 @@ The single seam every caller uses to reach speech-to-text.
 ``STT_ENGINE_MODE`` decides what sits behind it:
 
 * ``local``  – SpeechBrain + Whisper in this process (:mod:`app.modules.stt.local`)
-* ``remote`` – the standalone sst_v1 service (:mod:`app.modules.stt.remote_client`)
+* ``remote`` – an external STT HTTP service (:mod:`app.modules.stt.remote_client`)
 
 Routes depend only on this facade, so swapping engines needs no route changes —
-which is exactly how local inference replaced the sst_v1 proxy without touching
+which is how local inference replaced the remote proxy without touching
 ``/api/v1/pipeline/upload``. ``transcribe_upload`` keeps its original signature
 for that reason.
 """
@@ -53,14 +53,14 @@ class STTService:
         return EngineStatusResponse(
             mode="remote",
             device="n/a",
-            whisper_model="delegated to sst_v1",
+            whisper_model="delegated to remote STT",
             whisper_backend=settings.DEFAULT_STT_ENGINE,
             compute_type="n/a",
             diarization_enabled=False,
             default_num_speakers=None,
             models_loaded=False,
             dependencies_available=True,
-            detail=f"Proxying to sst_v1 at {settings.STT_BASE_URL}",
+            detail=f"Proxying to remote STT at {settings.STT_BASE_URL}",
             extra={"stt_base_url": settings.STT_BASE_URL},
         )
 
@@ -105,7 +105,7 @@ class STTService:
             raise ConfigurationError(
                 "Live streaming is not implemented for the local STT engine. "
                 "Use POST /api/v1/stt/diarize with a recorded file, or set "
-                "STT_ENGINE_MODE=remote to proxy live audio to sst_v1."
+                "STT_ENGINE_MODE=remote to proxy live audio to an external STT service."
             )
         return RemoteSTTClient().live_url()
 
@@ -155,8 +155,8 @@ class STTService:
         """Transcribe an uploaded audio file and label each turn with a speaker."""
         if not self.is_local:
             raise ConfigurationError(
-                "Speaker diarization requires STT_ENGINE_MODE=local; the sst_v1 "
-                "service does not expose a diarization endpoint."
+                "Speaker diarization requires STT_ENGINE_MODE=local; remote STT "
+                "does not expose a diarization endpoint."
             )
 
         from app.modules.stt.local import runner

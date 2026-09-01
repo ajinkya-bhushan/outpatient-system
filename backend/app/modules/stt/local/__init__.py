@@ -16,5 +16,5 @@ Stage layout:
     storage.py     local audio + result persistence
 
 Callers should go through :mod:`app.modules.stt.service`, which selects between
-this engine and the remote sst_v1 client based on ``STT_ENGINE_MODE``.
+this engine and the remote STT client based on ``STT_ENGINE_MODE``.
 """

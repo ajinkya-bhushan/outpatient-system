@@ -47,7 +47,7 @@ Aligning per word lets a speaker change land mid-sentence, where it belongs.
 
 - `local` (default) — models load in the backend process. Requires the optional
   dependency group: `uv sync --extra stt`.
-- `remote` — proxy to the standalone `sst_v1` service at `STT_BASE_URL`. No
+- `remote` — proxy to a standalone STT service at `STT_BASE_URL`. No
   diarization; `/diarize` returns 503.
 
 ---
@@ -160,7 +160,7 @@ curl -X POST http://127.0.0.1:10200/api/v1/stt/diarize \
 ### `POST /api/v1/stt/transcribe`
 
 Transcribe to plain text with no speaker labels. Request and response are
-unchanged from the previous sst_v1-proxy implementation, so existing callers
+unchanged from the previous remote-proxy implementation, so existing callers
 keep working.
 
 **Request** — `multipart/form-data`
@@ -285,7 +285,7 @@ Delete a job directory including its audio. `404` if there is no such job.
 
 ### `WS /api/v1/stt/live`
 
-Live-recording proxy to sst_v1. Available in `remote` mode only; in `local` mode
+Live-recording proxy to a remote STT service. Available in `remote` mode only; in `local` mode
 it accepts the socket, sends `{"type": "error", "detail": "..."}` and closes.
 See [Not implemented yet](#not-implemented-yet).
 
@@ -347,9 +347,9 @@ Fields whose meaning is not obvious from the name:
 | 404 | Not found | Unknown `job_id` |
 | 422 | Schema validation failed | Missing `file`, out-of-range query parameter |
 | 500 | Inference error | Unexpected model failure |
-| 502 | Upstream unavailable | `remote` mode and sst_v1 is unreachable |
+| 502 | Upstream unavailable | `remote` mode and the STT service is unreachable |
 | 503 | Not configured | `stt` extra not installed, models cannot load, ffmpeg missing, diarization disabled, `/diarize` in `remote` mode |
-| 504 | Upstream timeout | `remote` mode and sst_v1 exceeded `STT_TIMEOUT_SECONDS` |
+| 504 | Upstream timeout | `remote` mode and the STT service exceeded `STT_TIMEOUT_SECONDS` |
 
 Errors use FastAPI's standard shape:
 
@@ -370,7 +370,7 @@ for a single request's inference time.
 
 | Variable | Default | Description |
 |---|---|---|
-| `STT_ENGINE_MODE` | `local` | `local` runs models in-process; `remote` proxies to sst_v1 |
+| `STT_ENGINE_MODE` | `local` | `local` runs models in-process; `remote` proxies to an external STT service |
 | `STT_DEVICE` | `auto` | `auto`, `cuda`, or `cpu`. `auto` uses CUDA when available |
 | `STT_MODEL_PRELOAD` | `false` | Load models at startup instead of on first request |
 | `WHISPER_MODEL` | `small.en` | Whisper model identifier |
@@ -442,7 +442,7 @@ ffmpeg and SpeechBrain's VAD are file-based.
 
 Measured on an RTX 5060 Ti with `small.en`, against test recordings built from
 mini-LibriSpeech (real voices, verified transcripts, exact speaker timelines).
-Reproduce with the harness in `sst_v1/scripts/`.
+Reproduce with a two-party fixture under `backend/tests/fixtures/diar_testset/`.
 
 | Test recording | Speakers | DER | WER | Word-speaker accuracy |
 |---|---|---|---|---|
@@ -471,7 +471,7 @@ The single clear weakness is speaker-count estimation, hence the default of 2.
   needs a rolling buffer, incremental clustering with cluster identity carried
   across windows, provisional labels sent to the UI, revision events when a
   label changes, and a full offline pass at the end of the recording to correct
-  the transcript. `WS /api/v1/stt/live` currently only proxies to sst_v1.
+  the transcript. `WS /api/v1/stt/live` currently only proxies to a remote STT service.
 - **Speaker identification.** Labels are anonymous clusters. Mapping them to
   real people needs either manual assignment in the UI (supported today via
   `speaker_names`) or voice enrolment: store a reference ECAPA embedding per

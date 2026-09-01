@@ -9,11 +9,11 @@ The pipeline is three modules:
 1. **stt** — upload audio, then transcribe it with speaker diarization
    (SpeechBrain + Whisper, in-process). See
    [`docs/STT_DIARIZATION_API.md`](docs/STT_DIARIZATION_API.md).
-2. **medical_comprehend** — extract clinical entities (`soap_create/app.py`)
-3. **generate_soap** — call the Aava documentation agent (`soap_create/agent_call.py`)
+2. **medical_comprehend** — extract clinical entities
+3. **generate_soap** — call the Aava documentation agent
 
 SOAP create (transcript → entities → note) is documented in
-[`../soap_create/API.md`](../soap_create/API.md).
+[`../docs/SOAP_CREATE_API.md`](../docs/SOAP_CREATE_API.md).
 
 ## Run
 
@@ -49,14 +49,9 @@ Seed login (after `database` migration `011_add_user_auth_columns`):
 | Physician | `DR-SMITH` | `Smith#2026` |
 | Admin | `ADMIN` | `Admin#2026` |
 
-Transcription runs inside this service by default. To delegate it to the
-standalone `sst_v1` service instead — a CPU-only host, or comparing engines —
-set `STT_ENGINE_MODE=remote` and start it on port 8000:
-
-```bash
-cd ../sst_v1
-uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
+Transcription runs inside this service by default (`STT_ENGINE_MODE=local`).
+To delegate it to an external STT HTTP service instead — a CPU-only host, or
+comparing engines — set `STT_ENGINE_MODE=remote` and `STT_BASE_URL`.
 
 Diarization is unavailable in remote mode, and live streaming is available only
 in remote mode.
@@ -76,7 +71,7 @@ in remote mode.
 | `GET` | `/api/v1/stt/jobs` | Stored transcription jobs |
 | `GET`/`DELETE` | `/api/v1/stt/jobs/{job_id}` | Fetch or delete a stored result |
 | `GET` | `/api/v1/stt/jobs/{job_id}/audio` | Stream the converted WAV (`Range` supported, for per-turn playback) |
-| `WS` | `/api/v1/stt/live` | Live recording proxy to `sst_v1` (remote mode only) |
+| `WS` | `/api/v1/stt/live` | Live recording proxy to a remote STT service (remote mode only) |
 | `POST` | `/api/v1/comprehend/entities` | Transcript → Comprehend Medical entities |
 | `POST` | `/api/v1/comprehend/icd10` | Transcript → InferICD10CM entities and ICD-10-CM codes |
 | `POST` | `/api/v1/comprehend/rxnorm` | Transcript → InferRxNorm entities and RxNorm concept IDs |
@@ -94,6 +89,6 @@ uv run pytest -q -m "not real_model"   # fast, no model weights needed
 uv run pytest -q -m real_model         # real SpeechBrain + Whisper end to end
 ```
 
-`real_model` tests load real weights and run against the audio fixtures in
-`../sst_v1/data/diar_testset/`; they skip themselves when the fixtures, ffmpeg,
+`real_model` tests load real weights and run against audio under
+`tests/fixtures/diar_testset/`; they skip themselves when the fixtures, ffmpeg,
 or the `stt` extra are missing.

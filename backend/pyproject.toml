@@ -32,8 +32,8 @@ dependencies = [
 #
 #   uv sync --extra stt
 #
-# With STT_ENGINE_MODE=remote the backend proxies to the sst_v1 service instead
-# and none of these packages are needed.
+# With STT_ENGINE_MODE=remote the backend proxies to an external STT service
+# instead and none of these packages are needed.
 #
 # GPU note: the torch wheel must target the host GPU architecture. Blackwell
 # (compute capability 12.0, e.g. RTX 50-series) needs a CUDA 12.8+ build:

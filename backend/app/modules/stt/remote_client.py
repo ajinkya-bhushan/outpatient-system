@@ -1,12 +1,11 @@
 """
 app/modules/stt/remote_client.py
 ─────────────────────────────────
-HTTP client for the standalone sst_v1 transcription service.
+HTTP client for a standalone remote transcription service.
 
 This was the original transcription path, kept for ``STT_ENGINE_MODE=remote``:
 it loads no models and simply forwards audio to a service that does. Useful when
-the orchestrator runs on a host without a GPU, or when sst_v1 is being used to
-compare engines.
+the orchestrator runs on a host without a GPU, or when comparing engines.
 
 Endpoints used
 --------------
@@ -30,7 +29,7 @@ logger = get_logger(__name__)
 
 
 class RemoteSTTClient:
-    """Proxy to the sst_v1 FastAPI service."""
+    """Proxy to a remote FastAPI STT service."""
 
     def __init__(self, base_url: str | None = None, timeout: float | None = None) -> None:
         self.base_url = (base_url or settings.STT_BASE_URL).rstrip("/")

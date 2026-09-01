@@ -1,7 +1,5 @@
 """Submit Comprehend Medical entities to the Aava agent and return a SOAP note.
 
-Source: soap_create/agent_call.py
-
 The Aava execute API rejects application/json file uploads, so the payload is
 sent as text/plain. The agent reads the upload from the capital-F ``Files``
 field and the ``{{input1}}`` userInputs placeholder. SOAP create uploads

@@ -11,7 +11,7 @@ from app.services.soap_store import DEFAULT_ENCOUNTER_ID
 
 client = TestClient(app)
 
-_SOAP_NOTE = Path(__file__).resolve().parents[2] / "soap_create" / "soap_note.md"
+_SOAP_NOTE = Path(__file__).resolve().parent / "fixtures" / "soap_note.md"
 
 _MINI_NOTE = """# MEDICAL SOAP NOTE
 

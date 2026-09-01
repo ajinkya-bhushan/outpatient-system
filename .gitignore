@@ -285,9 +285,8 @@ backend/data/models/
 *.aac
 *.opus
 
-# Generated STT diarization fixtures (rebuild via sst_v1/scripts/prepare_diar_testset.py)
-sst_v1/data/LibriSpeech/
-sst_v1/data/diar_testset/
+# Generated STT diarization fixtures
+backend/tests/fixtures/diar_testset/
 *.rttm
 *.ref.txt
 *.labelled.txt

@@ -9,14 +9,13 @@ fixture, and ffmpeg are all present, so a normal CI run is unaffected::
 
     pytest tests/test_stt_real_model.py -m real_model -v
 
-The fixture is built from mini-LibriSpeech by ``sst_v1/scripts/prepare_diar_testset.py``:
-real voices, verified transcripts, and turn boundaries accurate to the sample.
+Place a two-party WAV plus ``two_party.json`` under
+``backend/tests/fixtures/diar_testset/two_party/`` (real voices, verified
+transcripts, and turn boundaries accurate to the sample). The test skips when
+that fixture is absent.
 
 Scope: this asserts *functional correctness* — the right number of speakers,
-turns that alternate, text that is actually there, and a persisted job. Accuracy
-regression (diarization error rate, word error rate) is measured by the sweep
-harness in ``sst_v1/scripts/sweep_diarization.py``, which is the benchmark
-surface; duplicating it here would make the backend suite slow and flaky.
+turns that alternate, text that is actually there, and a persisted job.
 """
 
 from __future__ import annotations
@@ -30,7 +29,7 @@ from pathlib import Path
 
 import pytest
 
-FIXTURE_DIR = Path(__file__).resolve().parents[2] / "sst_v1" / "data" / "diar_testset" / "two_party"
+FIXTURE_DIR = Path(__file__).resolve().parent / "fixtures" / "diar_testset" / "two_party"
 FIXTURE_WAV = FIXTURE_DIR / "two_party.wav"
 FIXTURE_JSON = FIXTURE_DIR / "two_party.json"
 
@@ -38,8 +37,8 @@ FIXTURE_JSON = FIXTURE_DIR / "two_party.json"
 def _missing_requirements() -> str | None:
     if not FIXTURE_WAV.exists():
         return (
-            f"fixture not found at {FIXTURE_WAV}; build it with "
-            f"sst_v1/scripts/prepare_diar_testset.py"
+            f"fixture not found at {FIXTURE_WAV}; place two_party.wav and "
+            f"two_party.json under backend/tests/fixtures/diar_testset/two_party/"
         )
     if shutil.which("ffmpeg") is None:
         return "ffmpeg not on PATH"

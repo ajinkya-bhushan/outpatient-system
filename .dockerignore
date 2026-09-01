@@ -8,10 +8,6 @@
 **/.env
 **/.DS_Store
 frontend
-sst_v1
-soap_create
-praj_ui
-src
 docs
 database/.venv
 database/migrations

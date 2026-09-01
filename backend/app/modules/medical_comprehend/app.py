@@ -1,14 +1,7 @@
 """Detect clinical entities from an encounter transcript.
 
-Source: soap_create/app.py
-
-Original behaviour
-------------------
-The prototype called ``comprehendmedical.detect_entities_v2`` on a hardcoded
-doctor-patient conversation and wrote ``entities.json``.
-
-This module keeps that AWS API and entity shape, but accepts transcript text
-as input so it can sit between STT and SOAP generation. ``infer_icd10`` wraps
+This module calls ``comprehendmedical.detect_entities_v2`` on transcript text
+so it can sit between STT and SOAP generation. ``infer_icd10`` wraps
 ``comprehendmedical.infer_icd10_cm``; ``infer_rx_norm`` wraps
 ``comprehendmedical.infer_rx_norm``. ``build_aava_payload`` combines those
 results into the JSON uploaded to the SOAP agent.

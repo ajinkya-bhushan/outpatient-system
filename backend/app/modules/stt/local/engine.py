@@ -102,7 +102,7 @@ class LocalSTTEngine:
             return False, (
                 f"Local STT dependencies are not installed: {', '.join(missing)}. "
                 f"Install them with `uv sync --extra stt`, or set "
-                f"STT_ENGINE_MODE=remote to use the sst_v1 service."
+                f"STT_ENGINE_MODE=remote to use an external STT service."
             )
         return True, None
 

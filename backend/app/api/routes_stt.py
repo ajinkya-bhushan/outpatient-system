@@ -279,7 +279,7 @@ async def delete_job(job_id: str) -> dict:
 
 @router.websocket("/live")
 async def live_proxy(ws: WebSocket) -> None:
-    """Proxy live recording frames to sst_v1.
+    """Proxy live recording frames to a remote STT service.
 
     Only available with ``STT_ENGINE_MODE=remote``. The local engine is
     file-based; incremental streaming diarization is future work.

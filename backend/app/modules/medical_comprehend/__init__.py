@@ -1,6 +1,6 @@
 """AWS Comprehend Medical entity extraction.
 
-Refactored from soap_create/app.py so a transcript can be passed in instead of
+Refactored so a transcript can be passed in instead of
 a hardcoded sample conversation.
 """
 

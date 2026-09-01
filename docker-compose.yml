@@ -6,8 +6,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
       args:
-        # Set to false for a lean image that proxies to sst_v1 instead of
-        # running SpeechBrain and Whisper in-process (STT_ENGINE_MODE=remote).
+        # Set to false for a lean image that proxies to a remote STT service
+        # instead of running SpeechBrain and Whisper in-process
+        # (STT_ENGINE_MODE=remote).
         INSTALL_STT: "true"
         # Set when the host GPU needs a CUDA build other than the PyPI default,
         # e.g. https://download.pytorch.org/whl/cu128 for Blackwell cards.

@@ -3,11 +3,9 @@
 Transcript in, reviewable SOAP draft out. Served by the unified backend at
 `/api/v1/soap/*`; the interactive OpenAPI schema is at `/docs`.
 
-This folder (`soap_create/`) is the prototype: `app.py` calls Amazon
-Comprehend Medical, `agent_call.py` submits the entities to the Aava agent.
-The live service is the same pipeline inside the backend
-(`medical_comprehend` + `generate_soap`). Do not run a second HTTP server
-from here.
+The live pipeline lives in the backend (`medical_comprehend` + `generate_soap`).
+Gold samples for regression: [`fixtures/entities.json`](fixtures/entities.json)
+and [`fixtures/soap_note.md`](fixtures/soap_note.md).
 
 - [Architecture](#architecture)
 - [Status machine](#status-machine)
@@ -250,5 +248,5 @@ Failed jobs use `error.code`: `validation_failed`, `not_found`,
 | `MAX_TRANSCRIPT_CHARS` | Input cap | `20000` |
 | `DATABASE_URL` | Postgres for `soap_notes` | required for create |
 
-Gold sample: dengue/Gaia conversation in this folder → `entities.json` →
-`soap_note.md`.
+Gold sample: dengue/Gaia conversation → `docs/fixtures/entities.json` →
+`docs/fixtures/soap_note.md`.

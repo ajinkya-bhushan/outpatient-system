@@ -7,8 +7,8 @@ FROM python:3.11-slim-bookworm
 
 COPY --from=ghcr.io/astral-sh/uv:0.8.22 /uv /usr/local/bin/uv
 
-# Build without the speech stack for a lean orchestrator that proxies to sst_v1
-# (STT_ENGINE_MODE=remote):  --build-arg INSTALL_STT=false
+# Build without the speech stack for a lean orchestrator that proxies to a
+# remote STT service (STT_ENGINE_MODE=remote):  --build-arg INSTALL_STT=false
 ARG INSTALL_STT=true
 
 # Override when the host GPU needs a CUDA build other than the one on PyPI.
