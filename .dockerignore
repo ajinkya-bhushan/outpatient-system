@@ -1,0 +1,16 @@
+.git
+.gitignore
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+**/.env
+**/.DS_Store
+frontend
+docs
+database/.venv
+database/migrations
+database/scripts
+backend/.venv
+backend/tests

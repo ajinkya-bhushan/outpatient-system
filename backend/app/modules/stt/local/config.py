@@ -1,0 +1,129 @@
+"""
+app/modules/stt/local/config.py
+────────────────────────────────
+Algorithmic configuration for the local diarization pipeline.
+
+Deliberately plain dataclasses rather than pydantic-settings: these are model
+and clustering parameters that get swept during evaluation, whereas deployment
+configuration lives in :mod:`app.core.config`. :func:`config_from_settings`
+bridges the two so the API surface only ever exposes environment variables.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from app.core.config import settings
+
+
+def normalise_device(device: str) -> str:
+    """Expand a bare ``"cuda"`` to ``"cuda:0"``.
+
+    SpeechBrain parses ``run_opts["device"]`` by splitting on ``":"`` and warns
+    noisily on a bare ``"cuda"``, so pin the index explicitly.
+    """
+    return "cuda:0" if device == "cuda" else device
+
+
+@dataclass
+class VADConfig:
+    """SpeechBrain CRDNN voice-activity-detection settings."""
+
+    source: str = "speechbrain/vad-crdnn-libriparty"
+    savedir: str = "models/vad-crdnn"
+
+    activation_th: float = 0.5
+    deactivation_th: float = 0.25
+    # Merge speech regions separated by less than this many seconds.
+    close_th: float = 0.25
+    # Drop speech regions shorter than this many seconds.
+    len_th: float = 0.25
+    # The neural VAD tends to merge close segments; the energy pass splits them.
+    apply_energy_vad: bool = True
+    double_check: bool = True
+    speech_th: float = 0.5
+
+
+@dataclass
+class EmbeddingConfig:
+    """ECAPA-TDNN speaker-embedding settings."""
+
+    source: str = "speechbrain/spkrec-ecapa-voxceleb"
+    savedir: str = "models/ecapa"
+
+    # Sliding sub-segment geometry. 1.5s/0.75s is a good compromise for
+    # conversational turns; the AMI recipe uses 3.0s/1.5s for long meetings.
+    window_sec: float = 1.5
+    shift_sec: float = 0.75
+    # Sub-segments shorter than this are dropped: ECAPA embeddings from very
+    # short audio are dominated by phonetic rather than speaker content.
+    min_subseg_sec: float = 0.5
+    batch_size: int = 32
+
+
+@dataclass
+class ClusteringConfig:
+    """Spectral-clustering settings (SpeechBrain ``Spec_Clust_unorm``)."""
+
+    min_speakers: int = 2
+    max_speakers: int = 6
+
+    # SpeechBrain prunes the affinity matrix so that roughly ``pval * N``
+    # neighbours survive in each row. That makes a fixed pval dependent on
+    # recording length, so by default we derive it from a target neighbour
+    # count instead. Set ``pval`` explicitly to override.
+    pval: float | None = None
+    target_neighbors: int = 8
+    min_neighbors: int = 3
+
+    # Below this many sub-segments the eigen-gap heuristic is unreliable and
+    # we fall back to agglomerative clustering.
+    min_subsegs_for_spectral: int = 6
+
+    # Spectral clustering cannot return a single cluster, so a one-voice
+    # recording is screened out beforehand: if the mean pairwise cosine
+    # similarity of all embeddings exceeds this, everything is one speaker.
+    # Only consulted when ``min_speakers <= 1``.
+    single_speaker_cosine_th: float = 0.55
+
+
+@dataclass
+class DiarizationConfig:
+    """Top-level configuration for the diarization pipeline."""
+
+    sample_rate: int = 16_000
+    device: str = "cpu"
+
+    vad: VADConfig = field(default_factory=VADConfig)
+    embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
+    clustering: ClusteringConfig = field(default_factory=ClusteringConfig)
+
+    def __post_init__(self) -> None:
+        self.device = normalise_device(self.device)
+
+
+def config_from_settings() -> DiarizationConfig:
+    """Build a :class:`DiarizationConfig` from application settings.
+
+    Model weights are cached under ``MODEL_CACHE_DIR`` so a container restart
+    does not re-download them.
+    """
+    cache_dir = settings.MODEL_CACHE_DIR.rstrip("/")
+
+    return DiarizationConfig(
+        device=settings.resolved_stt_device,
+        vad=VADConfig(
+            source=settings.DIARIZATION_VAD_SOURCE,
+            savedir=f"{cache_dir}/vad-crdnn",
+        ),
+        embedding=EmbeddingConfig(
+            source=settings.DIARIZATION_EMBEDDING_SOURCE,
+            savedir=f"{cache_dir}/ecapa",
+            window_sec=settings.DIARIZATION_WINDOW_SEC,
+            shift_sec=settings.DIARIZATION_SHIFT_SEC,
+        ),
+        clustering=ClusteringConfig(
+            min_speakers=settings.DIARIZATION_MIN_SPEAKERS,
+            max_speakers=settings.DIARIZATION_MAX_SPEAKERS,
+        ),
+    )
